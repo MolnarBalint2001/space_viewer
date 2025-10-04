@@ -39,6 +39,461 @@ export interface AdminAuthLoginPost200Response {
 /**
  * 
  * @export
+ * @interface DatasetAttachment
+ */
+export interface DatasetAttachment {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'originalFilename'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'mimeType'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetAttachment
+     */
+    'size'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'objectKey'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'downloadUrl'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetAttachment
+     */
+    'updatedAt'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DatasetCreateRequest
+ */
+export interface DatasetCreateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetCreateRequest
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetCreateRequest
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {DatasetVisibility}
+     * @memberof DatasetCreateRequest
+     */
+    'visibility'?: DatasetVisibility;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface DatasetDetail
+ */
+export interface DatasetDetail {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {DatasetVisibility}
+     * @memberof DatasetDetail
+     */
+    'visibility'?: DatasetVisibility;
+    /**
+     * 
+     * @type {DatasetStatus}
+     * @memberof DatasetDetail
+     */
+    'status'?: DatasetStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'shareToken'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'readyAt'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetDetail
+     */
+    'updatedAt'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetDetail
+     */
+    'fileCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetDetail
+     */
+    'attachmentCount'?: number;
+    /**
+     * 
+     * @type {Array<DatasetFile>}
+     * @memberof DatasetDetail
+     */
+    'files'?: Array<DatasetFile>;
+    /**
+     * 
+     * @type {Array<DatasetAttachment>}
+     * @memberof DatasetDetail
+     */
+    'attachments'?: Array<DatasetAttachment>;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface DatasetFile
+ */
+export interface DatasetFile {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'originalFilename'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'mimeType'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'size'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'width'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'height'?: number | null;
+    /**
+     * 
+     * @type {DatasetFileStatus}
+     * @memberof DatasetFile
+     */
+    'status'?: DatasetFileStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'errorMessage'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'objectKey'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'downloadUrl'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'mbtilesKey'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'mbtilesDownloadUrl'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'mbtilesSize'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'tilesetKey'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'centerLat'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetFile
+     */
+    'centerLng'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'updatedAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetFile
+     */
+    'processedAt'?: string | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const DatasetFileStatus = {
+    Uploaded: 'uploaded',
+    Processing: 'processing',
+    Ready: 'ready',
+    Failed: 'failed'
+} as const;
+
+export type DatasetFileStatus = typeof DatasetFileStatus[keyof typeof DatasetFileStatus];
+
+
+/**
+ * 
+ * @export
+ * @interface DatasetListResponse
+ */
+export interface DatasetListResponse {
+    /**
+     * 
+     * @type {Array<DatasetSummary>}
+     * @memberof DatasetListResponse
+     */
+    'items'?: Array<DatasetSummary>;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const DatasetStatus = {
+    Empty: 'empty',
+    Uploading: 'uploading',
+    Processing: 'processing',
+    Ready: 'ready',
+    Failed: 'failed'
+} as const;
+
+export type DatasetStatus = typeof DatasetStatus[keyof typeof DatasetStatus];
+
+
+/**
+ * 
+ * @export
+ * @interface DatasetSummary
+ */
+export interface DatasetSummary {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {DatasetVisibility}
+     * @memberof DatasetSummary
+     */
+    'visibility'?: DatasetVisibility;
+    /**
+     * 
+     * @type {DatasetStatus}
+     * @memberof DatasetSummary
+     */
+    'status'?: DatasetStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'shareToken'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'readyAt'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetSummary
+     */
+    'updatedAt'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetSummary
+     */
+    'fileCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DatasetSummary
+     */
+    'attachmentCount'?: number;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface DatasetUpdateRequest
+ */
+export interface DatasetUpdateRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetUpdateRequest
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DatasetUpdateRequest
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {DatasetVisibility}
+     * @memberof DatasetUpdateRequest
+     */
+    'visibility'?: DatasetVisibility;
+}
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const DatasetVisibility = {
+    Private: 'private',
+    Public: 'public',
+    Link: 'link'
+} as const;
+
+export type DatasetVisibility = typeof DatasetVisibility[keyof typeof DatasetVisibility];
+
+
+/**
+ * 
+ * @export
  * @interface ErrorResponse
  */
 export interface ErrorResponse {
@@ -86,6 +541,32 @@ export interface LoginDto {
      * @memberof LoginDto
      */
     'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface ShareTokenResponse
+ */
+export interface ShareTokenResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareTokenResponse
+     */
+    'shareToken'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SignedUrlResponse
+ */
+export interface SignedUrlResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof SignedUrlResponse
+     */
+    'url'?: string;
 }
 /**
  * 
@@ -218,6 +699,921 @@ export class AdminAuthApi extends BaseAPI {
 
 
 /**
+ * DatasetsApi - axios parameter creator
+ * @export
+ */
+export const DatasetsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Melléklet letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet: async (datasetId: string, attachmentId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet', 'datasetId', datasetId)
+            // verify required parameter 'attachmentId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet', 'attachmentId', attachmentId)
+            const localVarPath = `/admin/datasets/{datasetId}/attachments/{attachmentId}/download`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"attachmentId"}}`, encodeURIComponent(String(attachmentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary PDF mellékletek feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} attachments 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdAttachmentsPost: async (datasetId: string, attachments: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdAttachmentsPost', 'datasetId', datasetId)
+            // verify required parameter 'attachments' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdAttachmentsPost', 'attachments', attachments)
+            const localVarPath = `/admin/datasets/{datasetId}/attachments`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (attachments) {
+                attachments.forEach((element) => {
+                    localVarFormParams.append('attachments', element as any);
+                })
+            }
+
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary TIF fájl letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesFileIdDownloadGet: async (datasetId: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesFileIdDownloadGet', 'datasetId', datasetId)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesFileIdDownloadGet', 'fileId', fileId)
+            const localVarPath = `/admin/datasets/{datasetId}/files/{fileId}/download`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary MBTiles letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesFileIdMbtilesGet: async (datasetId: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesFileIdMbtilesGet', 'datasetId', datasetId)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesFileIdMbtilesGet', 'fileId', fileId)
+            const localVarPath = `/admin/datasets/{datasetId}/files/{fileId}/mbtiles`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary TIF fájlok feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} files 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesPost: async (datasetId: string, files: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesPost', 'datasetId', datasetId)
+            // verify required parameter 'files' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdFilesPost', 'files', files)
+            const localVarPath = `/admin/datasets/{datasetId}/files`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (files) {
+                files.forEach((element) => {
+                    localVarFormParams.append('files', element as any);
+                })
+            }
+
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdGet: async (datasetId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdGet', 'datasetId', datasetId)
+            const localVarPath = `/admin/datasets/{datasetId}`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés módosítása
+         * @param {string} datasetId 
+         * @param {DatasetUpdateRequest} datasetUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdPatch: async (datasetId: string, datasetUpdateRequest: DatasetUpdateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdPatch', 'datasetId', datasetId)
+            // verify required parameter 'datasetUpdateRequest' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdPatch', 'datasetUpdateRequest', datasetUpdateRequest)
+            const localVarPath = `/admin/datasets/{datasetId}`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(datasetUpdateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztási link visszavonása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdShareDelete: async (datasetId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdShareDelete', 'datasetId', datasetId)
+            const localVarPath = `/admin/datasets/{datasetId}/share`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztható link létrehozása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdSharePost: async (datasetId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('adminDatasetsDatasetIdSharePost', 'datasetId', datasetId)
+            const localVarPath = `/admin/datasets/{datasetId}/share`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Saját adatgyűjtések listázása
+         * @param {DatasetVisibility} [visibility] 
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsGet: async (visibility?: DatasetVisibility, search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/admin/datasets`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (visibility !== undefined) {
+                localVarQueryParameter['visibility'] = visibility;
+            }
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Új adatgyűjtés létrehozása
+         * @param {DatasetCreateRequest} datasetCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsPost: async (datasetCreateRequest: DatasetCreateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetCreateRequest' is not null or undefined
+            assertParamExists('adminDatasetsPost', 'datasetCreateRequest', datasetCreateRequest)
+            const localVarPath = `/admin/datasets`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(datasetCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DatasetsApi - functional programming interface
+ * @export
+ */
+export const DatasetsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DatasetsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Melléklet letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary PDF mellékletek feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} attachments 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdAttachmentsPost(datasetId: string, attachments: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdAttachmentsPost(datasetId, attachments, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdAttachmentsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary TIF fájl letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdFilesFileIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary MBTiles letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdFilesFileIdMbtilesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary TIF fájlok feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} files 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdFilesPost(datasetId: string, files: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdFilesPost(datasetId, files, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdFilesPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdGet(datasetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés módosítása
+         * @param {string} datasetId 
+         * @param {DatasetUpdateRequest} datasetUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdPatch(datasetId: string, datasetUpdateRequest: DatasetUpdateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdPatch(datasetId, datasetUpdateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztási link visszavonása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdShareDelete(datasetId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdShareDelete(datasetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdShareDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztható link létrehozása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsDatasetIdSharePost(datasetId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareTokenResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsDatasetIdSharePost(datasetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsDatasetIdSharePost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Saját adatgyűjtések listázása
+         * @param {DatasetVisibility} [visibility] 
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsGet(visibility?: DatasetVisibility, search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsGet(visibility, search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Új adatgyűjtés létrehozása
+         * @param {DatasetCreateRequest} datasetCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async adminDatasetsPost(datasetCreateRequest: DatasetCreateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.adminDatasetsPost(datasetCreateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DatasetsApi.adminDatasetsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DatasetsApi - factory interface
+ * @export
+ */
+export const DatasetsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DatasetsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Melléklet letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary PDF mellékletek feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} attachments 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdAttachmentsPost(datasetId: string, attachments: Array<File>, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.adminDatasetsDatasetIdAttachmentsPost(datasetId, attachments, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary TIF fájl letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary MBTiles letöltési linkje
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary TIF fájlok feltöltése
+         * @param {string} datasetId 
+         * @param {Array<File>} files 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdFilesPost(datasetId: string, files: Array<File>, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.adminDatasetsDatasetIdFilesPost(datasetId, files, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.adminDatasetsDatasetIdGet(datasetId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Adatgyűjtés módosítása
+         * @param {string} datasetId 
+         * @param {DatasetUpdateRequest} datasetUpdateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdPatch(datasetId: string, datasetUpdateRequest: DatasetUpdateRequest, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.adminDatasetsDatasetIdPatch(datasetId, datasetUpdateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztási link visszavonása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdShareDelete(datasetId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.adminDatasetsDatasetIdShareDelete(datasetId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztható link létrehozása
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsDatasetIdSharePost(datasetId: string, options?: RawAxiosRequestConfig): AxiosPromise<ShareTokenResponse> {
+            return localVarFp.adminDatasetsDatasetIdSharePost(datasetId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Saját adatgyűjtések listázása
+         * @param {DatasetVisibility} [visibility] 
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsGet(visibility?: DatasetVisibility, search?: string, options?: RawAxiosRequestConfig): AxiosPromise<DatasetListResponse> {
+            return localVarFp.adminDatasetsGet(visibility, search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Új adatgyűjtés létrehozása
+         * @param {DatasetCreateRequest} datasetCreateRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        adminDatasetsPost(datasetCreateRequest: DatasetCreateRequest, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.adminDatasetsPost(datasetCreateRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DatasetsApi - object-oriented interface
+ * @export
+ * @class DatasetsApi
+ * @extends {BaseAPI}
+ */
+export class DatasetsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Melléklet letöltési linkje
+     * @param {string} datasetId 
+     * @param {string} attachmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary PDF mellékletek feltöltése
+     * @param {string} datasetId 
+     * @param {Array<File>} attachments 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdAttachmentsPost(datasetId: string, attachments: Array<File>, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdAttachmentsPost(datasetId, attachments, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary TIF fájl letöltési linkje
+     * @param {string} datasetId 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary MBTiles letöltési linkje
+     * @param {string} datasetId 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary TIF fájlok feltöltése
+     * @param {string} datasetId 
+     * @param {Array<File>} files 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdFilesPost(datasetId: string, files: Array<File>, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdFilesPost(datasetId, files, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Adatgyűjtés részletei
+     * @param {string} datasetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdGet(datasetId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Adatgyűjtés módosítása
+     * @param {string} datasetId 
+     * @param {DatasetUpdateRequest} datasetUpdateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdPatch(datasetId: string, datasetUpdateRequest: DatasetUpdateRequest, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdPatch(datasetId, datasetUpdateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztási link visszavonása
+     * @param {string} datasetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdShareDelete(datasetId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdShareDelete(datasetId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztható link létrehozása
+     * @param {string} datasetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsDatasetIdSharePost(datasetId: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsDatasetIdSharePost(datasetId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Saját adatgyűjtések listázása
+     * @param {DatasetVisibility} [visibility] 
+     * @param {string} [search] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsGet(visibility?: DatasetVisibility, search?: string, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsGet(visibility, search, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Új adatgyűjtés létrehozása
+     * @param {DatasetCreateRequest} datasetCreateRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasetsApi
+     */
+    public adminDatasetsPost(datasetCreateRequest: DatasetCreateRequest, options?: RawAxiosRequestConfig) {
+        return DatasetsApiFp(this.configuration).adminDatasetsPost(datasetCreateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * HealthApi - axios parameter creator
  * @export
  */
@@ -313,6 +1709,709 @@ export class HealthApi extends BaseAPI {
      */
     public healthGet(options?: RawAxiosRequestConfig) {
         return HealthApiFp(this.configuration).healthGet(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * PublicDatasetsApi - axios parameter creator
+ * @export
+ */
+export const PublicDatasetsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Nyilvános melléklet letöltési link
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet: async (datasetId: string, attachmentId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet', 'datasetId', datasetId)
+            // verify required parameter 'attachmentId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet', 'attachmentId', attachmentId)
+            const localVarPath = `/datasets/public/{datasetId}/attachments/{attachmentId}/download`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"attachmentId"}}`, encodeURIComponent(String(attachmentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Nyilvános TIF letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdFilesFileIdDownloadGet: async (datasetId: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdFilesFileIdDownloadGet', 'datasetId', datasetId)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdFilesFileIdDownloadGet', 'fileId', fileId)
+            const localVarPath = `/datasets/public/{datasetId}/files/{fileId}/download`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Nyilvános MBTiles letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdFilesFileIdMbtilesGet: async (datasetId: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdFilesFileIdMbtilesGet', 'datasetId', datasetId)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdFilesFileIdMbtilesGet', 'fileId', fileId)
+            const localVarPath = `/datasets/public/{datasetId}/files/{fileId}/mbtiles`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdGet: async (datasetId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'datasetId' is not null or undefined
+            assertParamExists('datasetsPublicDatasetIdGet', 'datasetId', datasetId)
+            const localVarPath = `/datasets/public/{datasetId}`
+                .replace(`{${"datasetId"}}`, encodeURIComponent(String(datasetId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtések listázása
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicGet: async (search?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/datasets/public`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztott melléklet letöltési link
+         * @param {string} token 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenAttachmentsAttachmentIdDownloadGet: async (token: string, attachmentId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('datasetsSharedTokenAttachmentsAttachmentIdDownloadGet', 'token', token)
+            // verify required parameter 'attachmentId' is not null or undefined
+            assertParamExists('datasetsSharedTokenAttachmentsAttachmentIdDownloadGet', 'attachmentId', attachmentId)
+            const localVarPath = `/datasets/shared/{token}/attachments/{attachmentId}/download`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)))
+                .replace(`{${"attachmentId"}}`, encodeURIComponent(String(attachmentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztott TIF letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenFilesFileIdDownloadGet: async (token: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('datasetsSharedTokenFilesFileIdDownloadGet', 'token', token)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('datasetsSharedTokenFilesFileIdDownloadGet', 'fileId', fileId)
+            const localVarPath = `/datasets/shared/{token}/files/{fileId}/download`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztott MBTiles letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenFilesFileIdMbtilesGet: async (token: string, fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('datasetsSharedTokenFilesFileIdMbtilesGet', 'token', token)
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('datasetsSharedTokenFilesFileIdMbtilesGet', 'fileId', fileId)
+            const localVarPath = `/datasets/shared/{token}/files/{fileId}/mbtiles`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)))
+                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Megosztott adatgyűjtés részletei
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenGet: async (token: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'token' is not null or undefined
+            assertParamExists('datasetsSharedTokenGet', 'token', token)
+            const localVarPath = `/datasets/shared/{token}`
+                .replace(`{${"token"}}`, encodeURIComponent(String(token)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * PublicDatasetsApi - functional programming interface
+ * @export
+ */
+export const PublicDatasetsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = PublicDatasetsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Nyilvános melléklet letöltési link
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Nyilvános TIF letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsPublicDatasetIdFilesFileIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Nyilvános MBTiles letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsPublicDatasetIdFilesFileIdMbtilesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsPublicDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsPublicDatasetIdGet(datasetId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsPublicDatasetIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtések listázása
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsPublicGet(search?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsPublicGet(search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsPublicGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztott melléklet letöltési link
+         * @param {string} token 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token: string, attachmentId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token, attachmentId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsSharedTokenAttachmentsAttachmentIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztott TIF letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsSharedTokenFilesFileIdDownloadGet(token: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsSharedTokenFilesFileIdDownloadGet(token, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsSharedTokenFilesFileIdDownloadGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztott MBTiles letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsSharedTokenFilesFileIdMbtilesGet(token: string, fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SignedUrlResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsSharedTokenFilesFileIdMbtilesGet(token, fileId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsSharedTokenFilesFileIdMbtilesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Megosztott adatgyűjtés részletei
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async datasetsSharedTokenGet(token: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DatasetDetail>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.datasetsSharedTokenGet(token, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PublicDatasetsApi.datasetsSharedTokenGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * PublicDatasetsApi - factory interface
+ * @export
+ */
+export const PublicDatasetsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = PublicDatasetsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Nyilvános melléklet letöltési link
+         * @param {string} datasetId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Nyilvános TIF letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Nyilvános MBTiles letöltési link
+         * @param {string} datasetId 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtés részletei
+         * @param {string} datasetId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.datasetsPublicDatasetIdGet(datasetId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Nyilvános adatgyűjtések listázása
+         * @param {string} [search] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsPublicGet(search?: string, options?: RawAxiosRequestConfig): AxiosPromise<DatasetListResponse> {
+            return localVarFp.datasetsPublicGet(search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztott melléklet letöltési link
+         * @param {string} token 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token: string, attachmentId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token, attachmentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztott TIF letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenFilesFileIdDownloadGet(token: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsSharedTokenFilesFileIdDownloadGet(token, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztott MBTiles letöltési link
+         * @param {string} token 
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenFilesFileIdMbtilesGet(token: string, fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<SignedUrlResponse> {
+            return localVarFp.datasetsSharedTokenFilesFileIdMbtilesGet(token, fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Megosztott adatgyűjtés részletei
+         * @param {string} token 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        datasetsSharedTokenGet(token: string, options?: RawAxiosRequestConfig): AxiosPromise<DatasetDetail> {
+            return localVarFp.datasetsSharedTokenGet(token, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * PublicDatasetsApi - object-oriented interface
+ * @export
+ * @class PublicDatasetsApi
+ * @extends {BaseAPI}
+ */
+export class PublicDatasetsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Nyilvános melléklet letöltési link
+     * @param {string} datasetId 
+     * @param {string} attachmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId: string, attachmentId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsPublicDatasetIdAttachmentsAttachmentIdDownloadGet(datasetId, attachmentId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Nyilvános TIF letöltési link
+     * @param {string} datasetId 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsPublicDatasetIdFilesFileIdDownloadGet(datasetId, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Nyilvános MBTiles letöltési link
+     * @param {string} datasetId 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsPublicDatasetIdFilesFileIdMbtilesGet(datasetId, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Nyilvános adatgyűjtés részletei
+     * @param {string} datasetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsPublicDatasetIdGet(datasetId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsPublicDatasetIdGet(datasetId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Nyilvános adatgyűjtések listázása
+     * @param {string} [search] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsPublicGet(search?: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsPublicGet(search, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztott melléklet letöltési link
+     * @param {string} token 
+     * @param {string} attachmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token: string, attachmentId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsSharedTokenAttachmentsAttachmentIdDownloadGet(token, attachmentId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztott TIF letöltési link
+     * @param {string} token 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsSharedTokenFilesFileIdDownloadGet(token: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsSharedTokenFilesFileIdDownloadGet(token, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztott MBTiles letöltési link
+     * @param {string} token 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsSharedTokenFilesFileIdMbtilesGet(token: string, fileId: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsSharedTokenFilesFileIdMbtilesGet(token, fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Megosztott adatgyűjtés részletei
+     * @param {string} token 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PublicDatasetsApi
+     */
+    public datasetsSharedTokenGet(token: string, options?: RawAxiosRequestConfig) {
+        return PublicDatasetsApiFp(this.configuration).datasetsSharedTokenGet(token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

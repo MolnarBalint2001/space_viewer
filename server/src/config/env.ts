@@ -1,9 +1,7 @@
-import path from "path";
 import { z } from "zod";
 
 
 import dotenv from "dotenv";
-console.log(dotenv)
 dotenv.config({ path: ".env" }); // <-- betölti a futásidőben elérhető .env fájlt
 
 const EnvSchema = z.object({
@@ -46,6 +44,15 @@ const EnvSchema = z.object({
   MINIO_SECRET_KEY: z.string().default('minioadmin'),
   MINIO_BUCKET: z.string().default('app-bucket'),
   MINIO_PRESIGN_EXPIRES: z.coerce.number().default(900), // seconds
+
+  DATASET_LOCAL_TILE_DIR: z.string().default('../data/mbtiles'),
+  TILESERVER_CONFIG_PATH: z.string().default('../data/mbtiles/config.json'),
+  TILESERVER_COMPOSE_FILE: z.string().default('../docker-compose.yml'),
+  TILESERVER_COMPOSE_SERVICE: z.string().default('tileserver-gl'),
+
+  // RabbitMQ
+  RABBITMQ_URL: z.string().default('amqp://rabbit:rabbit@localhost:5672'),
+  RABBITMQ_EXCHANGE: z.string().default('domain-events'),
 
   
 });

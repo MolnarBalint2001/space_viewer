@@ -1,6 +1,11 @@
-import { Order } from "../domain/entities/Order";
+import { DatasetStatus } from "../domain/entities/Dataset";
 
-export type DomainEventName = "order.created" | "order.status-changed" | "feedback.received";
+export type DomainEventName =
+  | "order.created"
+  | "order.status-changed"
+  | "feedback.received"
+  | "dataset.file.uploaded"
+  | "dataset.processing.completed";
 
 export interface DomainEvent<TPayload = any> {
   name: DomainEventName;
@@ -9,24 +14,24 @@ export interface DomainEvent<TPayload = any> {
   payload: TPayload;
 }
 
-export type OrderCreatedPayload = Order;
-
-export type OrderCreatedEvent = DomainEvent<OrderCreatedPayload> & {
-  name: "order.created";
-};
-
-export interface FeedbackReceivedPayload {
-  feedbackId: string;
-  rating: number;
-  comment: string;
-  submittedAt: string;
-  user: {
-    id: string;
-    email: string | null;
-    name: string | null;
-  };
+export interface DatasetFileUploadedPayload {
+  datasetId: string;
+  datasetFileId: string;
+  ownerId: string;
+  objectKey: string;
+  originalFilename: string;
 }
 
-export type FeedbackReceivedEvent = DomainEvent<FeedbackReceivedPayload> & {
-  name: "feedback.received";
+export type DatasetFileUploadedEvent = DomainEvent<DatasetFileUploadedPayload> & {
+  name: "dataset.file.uploaded";
+};
+
+export interface DatasetProcessingCompletedPayload {
+  datasetId: string;
+  ownerId: string;
+  status: DatasetStatus;
+}
+
+export type DatasetProcessingCompletedEvent = DomainEvent<DatasetProcessingCompletedPayload> & {
+  name: "dataset.processing.completed";
 };

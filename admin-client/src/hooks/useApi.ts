@@ -1,13 +1,17 @@
 import { useMemo } from "react";
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 import type { BaseAPI } from "../config/api/base";
 import { useAuth } from "../components/AuthContext";
 import { Configuration } from "../config/api";
 import { API_URL } from "../config/globals";
 // Generikus konstruktor típus
-type Constructor<T extends BaseAPI> = new (...args: any[]) => T;
+type ApiConstructor<T extends BaseAPI> = new (
+    configuration?: Configuration,
+    basePath?: string,
+    axios?: AxiosInstance
+) => T;
 
-export function useApi<T extends BaseAPI>(apiClassRef: Constructor<T>) {
+export function useApi<T extends BaseAPI>(apiClassRef: ApiConstructor<T>) {
     const { token, setToken } = useAuth();
 
     const api = useMemo(() => {
@@ -15,7 +19,6 @@ export function useApi<T extends BaseAPI>(apiClassRef: Constructor<T>) {
         const axiosInstance = axios.create({
             baseURL: API_URL,
         });
-        console.log(API_URL)
         // 2) Kimenő kérések: Authorization fejléc beállítása
         axiosInstance.interceptors.request.use((config) => {
             if (token) {

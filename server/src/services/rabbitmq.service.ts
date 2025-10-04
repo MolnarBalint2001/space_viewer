@@ -1,4 +1,5 @@
-import amqp, { Channel, ChannelModel, Connection, Options } from "amqplib";
+import amqp, { Channel, ChannelModel, Options } from "amqplib";
+import { env } from "../config/env";
 
 export type RabbitConfig = {
     url: string; // amqp://user:pass@host:5672
@@ -8,15 +9,19 @@ export type RabbitConfig = {
 let conn: ChannelModel;
 let channel: Channel;
 let cfg: RabbitConfig = {
-    url: "amqp://rabbit:rabbit@localhost:5672",
-    exchange: "domain-events"
+    url: env.RABBITMQ_URL,
+    exchange: env.RABBITMQ_EXCHANGE,
 };
 let initialized = false;
 
-export async function initRabbit() {
+export async function initRabbit(customCfg?: Partial<RabbitConfig>) {
     if (initialized) return;
+    if (customCfg) {
+        cfg = { ...cfg, ...customCfg };
+    }
     conn = await amqp.connect(cfg.url);
     channel = await conn.createChannel();
+    await channel.prefetch(1);
 
     await channel.assertExchange(cfg.exchange, "topic", { durable: true });
     await channel.assertExchange(`${cfg.exchange}.dlx`, "fanout", { durable: true });

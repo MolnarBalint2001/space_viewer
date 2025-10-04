@@ -2,6 +2,8 @@ import { Client as MinioClient } from 'minio';
 import { env } from '../config/env';
 import { logger } from '../utils/logger';
 import { Readable } from 'stream';
+import { createWriteStream, createReadStream } from 'fs';
+import { pipeline } from 'stream/promises';
 
 let client: MinioClient | null = null;
 
@@ -45,6 +47,15 @@ export async function putObject(
   return c.putObject(bucket, objectName, data as any, undefined, meta);
 }
 
+export async function putObjectFromFile(
+  objectName: string,
+  filePath: string,
+  contentType?: string,
+  bucket = env.MINIO_BUCKET,
+) {
+  return putObject(objectName, createReadStream(filePath), contentType, bucket);
+}
+
 export async function presignedGetUrl(objectName: string, expiresSec = env.MINIO_PRESIGN_EXPIRES, bucket = env.MINIO_BUCKET) {
   const c = getMinioClient();
   return c.presignedGetObject(bucket, objectName, expiresSec);
@@ -71,6 +82,17 @@ export async function listObjects(prefix = '', recursive = true, bucket = env.MI
   });
 }
 
+export async function getObjectStream(objectName: string, bucket = env.MINIO_BUCKET) {
+  const c = getMinioClient();
+  return c.getObject(bucket, objectName);
+}
+
+export async function downloadObject(objectName: string, destinationPath: string, bucket = env.MINIO_BUCKET) {
+  const stream = await getObjectStream(objectName, bucket);
+  const writeStream = createWriteStream(destinationPath);
+  await pipeline(stream, writeStream);
+}
+
 export async function initMinio() {
   const c = getMinioClient();
   // Simple call to verify connectivity
@@ -88,10 +110,12 @@ export default {
   getMinioClient,
   ensureBucket,
   putObject,
+  putObjectFromFile,
   presignedGetUrl,
   presignedPutUrl,
   removeObject,
   listObjects,
+  getObjectStream,
+  downloadObject,
   initMinio,
 };
-

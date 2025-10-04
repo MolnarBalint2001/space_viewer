@@ -13,6 +13,8 @@ servers:
 tags:
   - name: Health
   - name: AdminAuth
+  - name: Datasets
+  - name: PublicDatasets
 
 paths:
   /health:
@@ -61,6 +63,445 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ErrorResponse" }
 
+  /admin/datasets:
+    get:
+      tags: [Datasets]
+      summary: Saját adatgyűjtések listázása
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: visibility
+          required: false
+          schema: { $ref: "#/components/schemas/DatasetVisibility" }
+        - in: query
+          name: search
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Saját datasetek
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetListResponse" }
+    post:
+      tags: [Datasets]
+      summary: Új adatgyűjtés létrehozása
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DatasetCreateRequest" }
+      responses:
+        "201":
+          description: Létrehozott adatgyűjtés
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /admin/datasets/{datasetId}:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Datasets]
+      summary: Adatgyűjtés részletei
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Adatgyűjtés adatai
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+        "404":
+          description: Nem található
+    patch:
+      tags: [Datasets]
+      summary: Adatgyűjtés módosítása
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DatasetUpdateRequest" }
+      responses:
+        "200":
+          description: Frissített adatgyűjtés
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /admin/datasets/{datasetId}/files:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [Datasets]
+      summary: TIF fájlok feltöltése
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [files]
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Frissített adatgyűjtés a feltöltés után
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /admin/datasets/{datasetId}/attachments:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [Datasets]
+      summary: PDF mellékletek feltöltése
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [attachments]
+              properties:
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Frissített adatgyűjtés mellékletekkel
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /admin/datasets/{datasetId}/share:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [Datasets]
+      summary: Megosztható link létrehozása
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Megosztási token
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShareTokenResponse" }
+    delete:
+      tags: [Datasets]
+      summary: Megosztási link visszavonása
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Megosztás törölve
+
+  /admin/datasets/{datasetId}/files/{fileId}/download:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Datasets]
+      summary: TIF fájl letöltési linkje
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /admin/datasets/{datasetId}/files/{fileId}/mbtiles:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Datasets]
+      summary: MBTiles letöltési linkje
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /admin/datasets/{datasetId}/attachments/{attachmentId}/download:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Datasets]
+      summary: Melléklet letöltési linkje
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/public:
+    get:
+      tags: [PublicDatasets]
+      summary: Nyilvános adatgyűjtések listázása
+      parameters:
+        - in: query
+          name: search
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Nyilvános adatgyűjtések
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetListResponse" }
+
+  /datasets/public/{datasetId}:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [PublicDatasets]
+      summary: Nyilvános adatgyűjtés részletei
+      parameters:
+        - in: path
+          name: datasetId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Adatgyűjtés adatai
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /datasets/public/{datasetId}/files/{fileId}/download:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [PublicDatasets]
+      summary: Nyilvános TIF letöltési link
+      parameters:
+        - in: path
+          name: datasetId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/public/{datasetId}/files/{fileId}/mbtiles:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [PublicDatasets]
+      summary: Nyilvános MBTiles letöltési link
+      parameters:
+        - in: path
+          name: datasetId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/public/{datasetId}/attachments/{attachmentId}/download:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [PublicDatasets]
+      summary: Nyilvános melléklet letöltési link
+      parameters:
+        - in: path
+          name: datasetId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/shared/{token}:
+    parameters:
+      - in: path
+        name: token
+        required: true
+        schema: { type: string }
+    get:
+      tags: [PublicDatasets]
+      summary: Megosztott adatgyűjtés részletei
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Adatgyűjtés adatai
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /datasets/shared/{token}/files/{fileId}/download:
+    parameters:
+      - in: path
+        name: token
+        required: true
+        schema: { type: string }
+    get:
+      tags: [PublicDatasets]
+      summary: Megosztott TIF letöltési link
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/shared/{token}/files/{fileId}/mbtiles:
+    parameters:
+      - in: path
+        name: token
+        required: true
+        schema: { type: string }
+    get:
+      tags: [PublicDatasets]
+      summary: Megosztott MBTiles letöltési link
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+        - in: path
+          name: fileId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
+  /datasets/shared/{token}/attachments/{attachmentId}/download:
+    parameters:
+      - in: path
+        name: token
+        required: true
+        schema: { type: string }
+    get:
+      tags: [PublicDatasets]
+      summary: Megosztott melléklet letöltési link
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Aláírt letöltési URL
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignedUrlResponse" }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -93,3 +534,165 @@ components:
           type: object
           description: Zod flatten() struktúra
           additionalProperties: true
+
+    DatasetVisibility:
+      type: string
+      enum: [private, public, link]
+
+    DatasetStatus:
+      type: string
+      enum: [empty, uploading, processing, ready, failed]
+
+    DatasetFileStatus:
+      type: string
+      enum: [uploaded, processing, ready, failed]
+
+    DatasetFile:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        originalFilename: { type: string }
+        mimeType: { type: string }
+        size:
+          type: integer
+          format: int64
+          nullable: true
+        width:
+          type: integer
+          nullable: true
+        height:
+          type: integer
+          nullable: true
+        status:
+          $ref: "#/components/schemas/DatasetFileStatus"
+        errorMessage:
+          type: string
+          nullable: true
+        objectKey:
+          type: string
+          nullable: true
+        downloadUrl:
+          type: string
+          nullable: true
+        mbtilesKey:
+          type: string
+          nullable: true
+        mbtilesDownloadUrl:
+          type: string
+          nullable: true
+        mbtilesSize:
+          type: integer
+          format: int64
+          nullable: true
+        tilesetKey:
+          type: string
+          nullable: true
+        centerLat:
+          type: number
+          format: double
+          nullable: true
+        centerLng:
+          type: number
+          format: double
+          nullable: true
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        processedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    DatasetAttachment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        originalFilename: { type: string }
+        mimeType: { type: string }
+        size:
+          type: integer
+          format: int64
+          nullable: true
+        objectKey:
+          type: string
+          nullable: true
+        downloadUrl:
+          type: string
+          nullable: true
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    DatasetSummary:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description:
+          type: string
+          nullable: true
+        visibility:
+          $ref: "#/components/schemas/DatasetVisibility"
+        status:
+          $ref: "#/components/schemas/DatasetStatus"
+        shareToken:
+          type: string
+          nullable: true
+        readyAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        fileCount: { type: integer }
+        attachmentCount: { type: integer }
+
+    DatasetDetail:
+      allOf:
+        - $ref: "#/components/schemas/DatasetSummary"
+        - type: object
+          properties:
+            files:
+              type: array
+              items: { $ref: "#/components/schemas/DatasetFile" }
+            attachments:
+              type: array
+              items: { $ref: "#/components/schemas/DatasetAttachment" }
+
+    DatasetListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/DatasetSummary" }
+
+    DatasetCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description:
+          type: string
+          nullable: true
+        visibility:
+          $ref: "#/components/schemas/DatasetVisibility"
+
+    DatasetUpdateRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description:
+          type: string
+          nullable: true
+        visibility:
+          $ref: "#/components/schemas/DatasetVisibility"
+
+    ShareTokenResponse:
+      type: object
+      properties:
+        shareToken:
+          type: string
+
+    SignedUrlResponse:
+      type: object
+      properties:
+        url:
+          type: string

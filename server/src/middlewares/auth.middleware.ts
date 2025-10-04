@@ -2,8 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { AppDataSource } from '../db/dataSource';
-import { User } from '../domain/entities/User';
-import { logger } from '../utils/logger';
+import { AdminUser } from '../domain/entities/AdminUser';
 
 type AuthOptions = {
   optional?: boolean;          // ha true: token hiányában is továbbenged (req.user nélkül)
@@ -16,7 +15,7 @@ function extractBearerToken(req: Request): string | null {
   return m ? m[2] : null;
 }
 
-const userRepo = () => AppDataSource.getRepository(User);
+const adminUserRepo = () => AppDataSource.getRepository(AdminUser);
 
 /**
  * JWT auth middleware
@@ -39,16 +38,17 @@ export function auth(options: AuthOptions = {}) {
     }
 
     try {
-      const payload = jwt.verify(token, env.JWT_SECRET as string, {
+      const payload = jwt.verify(token, env.ADMIN_JWT_SECRET as string, {
         algorithms: ['HS384'],             // állítsd a valós algo-ra
         clockTolerance: clockToleranceSec, // kis tolerancia
       }) as any;
 
-      const user = await userRepo().findOneBy({ id: payload.id })
-      if (!user) throw new Error("User not found with id!")
-      req.user = user;
+      const userId = payload.id ?? payload.userId;
+      if (!userId) throw new Error('Token payload hiányos');
+      const user = await adminUserRepo().findOneBy({ id: userId });
+      if (!user) throw new Error("Admin felhasználó nem található");
+      req.user = user as any;
       req.token = token;
-      logger.info(user.email)
 
 
 

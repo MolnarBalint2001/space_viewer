@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import http from "http";
 import app from "./app";
 import { env } from "./config/env";
 import initializeRabbitMqConsumers from "./consumers/init";
@@ -8,6 +9,7 @@ import { initRabbit } from "./services/rabbitmq.service";
 import { connectRedis, redis } from "./services/redis";
 import { logger } from "./utils/logger";
 import { initMinio } from "./services/minio.service";
+import { closeWebsocket, initWebsocket } from "./services/websocket.service";
 // Avoid logging env secrets in production
 
 const port = env.PORT;
@@ -29,7 +31,10 @@ async function main() {
     await initMinio();
     logger.info("MinIO connected and bucket ready")
 
-    const server = app.listen(port, () => {
+    const server = http.createServer(app);
+    initWebsocket(server);
+
+    server.listen(port, () => {
       logger.info(`API listening on :${port} (${env.NODE_ENV})`);
     });
 
@@ -40,6 +45,7 @@ async function main() {
           if (AppDataSource.isInitialized) await AppDataSource.destroy();
           logger.info('DB connection closed');
         } finally {
+          closeWebsocket();
           process.exit(0);
         }
       });
