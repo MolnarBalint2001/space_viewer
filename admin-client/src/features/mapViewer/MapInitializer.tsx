@@ -1,4 +1,4 @@
-import { notifyManager } from "@tanstack/react-query";
+
 import axios from "axios";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -13,9 +13,12 @@ export const MapInitializer = () => {
     const {notifyError, notifySuccess} = useToast();
 
     const [crePopVis, setCrePopVis] = useState<boolean>(false);
-    const labelRef = useRef<HTMLInputElement>(null);
-    const [geom, setGeom] = useState<any | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [geom, setGeom] = useState<any | null>(null);
+    const [polygons, setPolygons] = useState<any[]>([])
+    const labelRef = useRef<HTMLInputElement>(null);
+  
+   
     const pendingLayerRef = useRef(null);
 
     //Actions

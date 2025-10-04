@@ -28,6 +28,8 @@ export const create = async (req: Request, res: Response):Promise<any> =>{
 
 export const getAll = async (req:Request, res:Response):Promise<any> =>{
 
+
+    
     return res.json({message:"Sikeres lekéréss"});
 
 
