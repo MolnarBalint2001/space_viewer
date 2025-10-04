@@ -7,6 +7,7 @@ import { useMapSidebar } from "../../components/MapSidebarContext";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { MapInitializer } from "./MapInitializer";
+import { Button } from "primereact/button";
 
 const DEFAULT_CENTER: [number, number] = [0.10437, 0.09613];
 const DEFAULT_ZOOM = 17;
@@ -58,6 +59,12 @@ export const MapViewerPage = () => {
                 <code className="truncate text-xs text-slate-400">{tileUrl}</code>
             </div>
             <div className="flex-1">
+                <Button
+                    icon={"pi pi-cog"}
+                    severity="secondary"
+                    text
+                    rounded
+                    className="absolute z-[1000] right-0 m-4" onClick={toggleOpened}></Button>
 
                 <MapContainer
                     key={`${tileUrl}-${parsedCenter[0]}-${parsedCenter[1]}`}
