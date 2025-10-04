@@ -64,6 +64,22 @@ export class DatasetFile {
   @Column({ type: "bigint", nullable: true })
   mbtilesSize?: string | null;
 
+
+  @Column({ type: "varchar", length: 512, nullable: true })
+  previewImageKey?: string | null;
+
+  @Column({ type: "varchar", length: 128, nullable: true })
+  previewImageMimeType?: string | null;
+
+  @Column({ type: "bigint", nullable: true })
+  previewImageSize?: string | null;
+
+  @Column({ type: "integer", nullable: true })
+  previewImageWidth?: number | null;
+
+  @Column({ type: "integer", nullable: true })
+  previewImageHeight?: number | null;
+
   @Column({ type: "varchar", length: 255, nullable: true })
   tilesetKey?: string | null;
 

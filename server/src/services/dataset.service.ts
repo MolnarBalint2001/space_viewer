@@ -58,6 +58,12 @@ export interface DatasetFileDto {
   mbtilesDownloadUrl?: string | null;
   mbtilesSize?: number | null;
   tilesetKey?: string | null;
+  previewImageKey?: string | null;
+  previewImageMimeType?: string | null;
+  previewImageSize?: number | null;
+  previewImageWidth?: number | null;
+  previewImageHeight?: number | null;
+  previewImageUrl?: string | null;
   centerLat?: number | null;
   centerLng?: number | null;
   createdAt: Date;
@@ -119,6 +125,12 @@ async function toFileDto(
     errorMessage: file.errorMessage ?? null,
     mbtilesKey: file.mbtilesKey ?? null,
     mbtilesSize: file.mbtilesSize ? Number(file.mbtilesSize) : null,
+    previewImageKey: opts.includeObjectKeys ? file.previewImageKey ?? null : null,
+    previewImageMimeType: file.previewImageMimeType ?? null,
+    previewImageSize: file.previewImageSize ? Number(file.previewImageSize) : null,
+    previewImageWidth: file.previewImageWidth ?? null,
+    previewImageHeight: file.previewImageHeight ?? null,
+    previewImageUrl: null,
     tilesetKey: file.tilesetKey ?? null,
     centerLat: file.centerLat ?? null,
     centerLng: file.centerLng ?? null,
@@ -146,6 +158,17 @@ async function toFileDto(
         result.mbtilesDownloadUrl = await presignedGetUrl(file.mbtilesKey);
       } catch (err) {
         logger.error("Failed to create presigned URL for MBTiles", {
+          err,
+          datasetFileId: file.id,
+        });
+      }
+    }
+
+    if (file.previewImageKey) {
+      try {
+        result.previewImageUrl = await presignedGetUrl(file.previewImageKey);
+      } catch (err) {
+        logger.error("Failed to create presigned URL for preview image", {
           err,
           datasetFileId: file.id,
         });
@@ -365,3 +388,4 @@ export async function updateDatasetStatus(
 export function createShareToken() {
   return randomUUID().replace(/-/g, "");
 }
+

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { In } from "typeorm";
 import { promises as fs, createReadStream } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -423,4 +424,118 @@ export async function getPublicAttachmentDownloadUrl(req: Request, res: Response
   }
   const url = await presignedGetUrl(attachment.objectKey);
   return res.json({ url });
+}
+
+
+export async function getDefault(req:Request, res:Response) {
+  
+  const defaultDataSet = await datasetFileRepo().findOne({
+    where:{},
+    order: {
+        createdAt: "DESC",
+    },
+});
+
+  return res.json(defaultDataSet);
+}
+
+
+export async function search(req: Request, res: Response) {
+  try {
+    const q = req.query.q as string;
+
+    if (!q || q.trim() === '') {
+      return res.json([]);
+    }
+
+    const repo = datasetRepo();
+
+    // Query builder: Case-insensitive startswith keresés a name field-en
+    const matchingDatasets = await repo
+      .createQueryBuilder('dataset')
+      .where('LOWER(dataset.name) LIKE LOWER(:q) || \'%\'', { q: q.trim() })
+      .orderBy('dataset.createdAt', 'DESC')
+      .getMany();
+
+    const datasetIds = matchingDatasets.map((dataset) => dataset.id);
+    const previewMap = new Map<string, { key: string | null; url: string | null }>();
+
+    if (datasetIds.length > 0) {
+      const files = await datasetFileRepo().find({
+        where: { datasetId: In(datasetIds) },
+        order: { createdAt: 'DESC' },
+      });
+
+      for (const file of files) {
+        if (previewMap.has(file.datasetId)) {
+          continue;
+        }
+
+        if (file.previewImageKey) {
+          try {
+            const url = await presignedGetUrl(file.previewImageKey);
+            previewMap.set(file.datasetId, { key: file.previewImageKey, url });
+          } catch (err) {
+            logger.error('Failed to create preview presigned URL', {
+              err,
+              datasetFileId: file.id,
+            });
+            previewMap.set(file.datasetId, { key: file.previewImageKey, url: null });
+          }
+        } else {
+          previewMap.set(file.datasetId, { key: null, url: null });
+        }
+      }
+    }
+
+    const payload = matchingDatasets.map((dataset) => {
+      const preview = previewMap.get(dataset.id);
+      return {
+        ...dataset,
+        previewImageKey: preview?.key ?? null,
+        previewImageUrl: preview?.url ?? null,
+        thumbnailUrl: preview?.url ?? null,
+      };
+    });
+
+    return res.json(payload);
+  } catch (error) {
+    console.error('Hiba a kereséskor:', error);
+    return res.status(500).json({ error: 'Keresési hiba történt' });
+  }
+}
+
+export async function getDatasetFile(req: Request, res: Response) {
+  const { datasetId } = req.params;
+
+  const files = await datasetFileRepo().find({
+    where: { datasetId },
+    order: { createdAt: 'DESC' },
+  });
+
+  const file =
+    files.find((candidate) => candidate.tilesetKey || candidate.mbtilesKey) ??
+    files[0];
+
+  if (!file) {
+    return res
+      .status(404)
+      .json({ error: 'No dataset file found for the requested dataset.' });
+  }
+
+  let previewImageUrl: string | null = null;
+  if (file.previewImageKey) {
+    try {
+      previewImageUrl = await presignedGetUrl(file.previewImageKey);
+    } catch (err) {
+      logger.error('Failed to create preview presigned URL', {
+        err,
+        datasetFileId: file.id,
+      });
+    }
+  }
+
+  const serialized = { ...file, previewImageUrl };
+
+  return res.json({ file: serialized });
 }

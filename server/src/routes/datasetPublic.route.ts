@@ -30,5 +30,10 @@ router.get(
   "/shared/:token/attachments/:attachmentId/download",
   DatasetController.getSharedAttachmentDownloadUrl
 );
+router.get("/getDefault", DatasetController.getDefault);
+
+router.get("/search", DatasetController.search);
+
+router.get("/getDatasetFile/:datasetId", DatasetController.getDatasetFile);
 
 export default router;
