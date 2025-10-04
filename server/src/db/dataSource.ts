@@ -5,6 +5,7 @@ import { AdminUser } from '../domain/entities/AdminUser';
 import { Dataset } from '../domain/entities/Dataset';
 import { DatasetFile } from '../domain/entities/DatasetFile';
 import { DatasetAttachment } from '../domain/entities/DatasetAttachment';
+import { Polygon } from '../domain/entities/Polygon';
 
 
 
@@ -23,6 +24,7 @@ export const AppDataSource = new DataSource({
     Dataset,
     DatasetFile,
     DatasetAttachment,
+    Polygon
   ],
   migrations: [
     "src/db/migrations/*.ts"

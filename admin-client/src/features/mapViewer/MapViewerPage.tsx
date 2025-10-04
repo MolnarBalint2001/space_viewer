@@ -2,6 +2,11 @@ import { useMemo } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { useSearchParams } from "react-router-dom";
 import { TILESERVER_URL } from "../../config/globals";
+import { useMapSidebar } from "../../components/MapSidebarContext";
+
+import "@geoman-io/leaflet-geoman-free";
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
+import { MapInitializer } from "./MapInitializer";
 
 const DEFAULT_CENTER: [number, number] = [0.10437, 0.09613];
 const DEFAULT_ZOOM = 17;
@@ -17,6 +22,10 @@ function buildTileUrl(tilesKey: string | null, tilesUrl: string | null): string 
     }
     return DEFAULT_TILE_URL;
 }
+
+
+
+
 
 export const MapViewerPage = () => {
     const [searchParams] = useSearchParams();
@@ -35,6 +44,11 @@ export const MapViewerPage = () => {
         return DEFAULT_CENTER;
     }, [latParam, lngParam]);
 
+    const {
+        toggleOpened
+    } = useMapSidebar();
+
+
     return (
         <div className="flex h-full w-full flex-col" style={{ height: "100%" }}>
             <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/60 px-4 py-2 text-sm text-slate-200">
@@ -44,6 +58,7 @@ export const MapViewerPage = () => {
                 <code className="truncate text-xs text-slate-400">{tileUrl}</code>
             </div>
             <div className="flex-1">
+
                 <MapContainer
                     key={`${tileUrl}-${parsedCenter[0]}-${parsedCenter[1]}`}
                     center={parsedCenter}
@@ -52,6 +67,8 @@ export const MapViewerPage = () => {
                     style={{ height: "100%", width: "100%" }}
                     zoomControl
                 >
+                    <MapInitializer />
+
                     <TileLayer
                         key={tileUrl}
                         maxNativeZoom={17}
@@ -62,5 +79,9 @@ export const MapViewerPage = () => {
                 </MapContainer>
             </div>
         </div>
+
+
     );
+
+
 };
