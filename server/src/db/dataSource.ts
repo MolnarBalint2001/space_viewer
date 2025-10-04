@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { env } from '../config/env';
 import { AdminUser } from '../domain/entities/AdminUser';
+import { Polygon } from '../domain/entities/Polygon';
 
 
 
@@ -17,6 +18,7 @@ export const AppDataSource = new DataSource({
   logging: env.NODE_ENV !== 'production',
   entities: [
     AdminUser,
+    Polygon
   ],
   migrations: [
     "src/db/migrations/*.ts"
