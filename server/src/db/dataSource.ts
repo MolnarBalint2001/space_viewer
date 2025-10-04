@@ -2,6 +2,9 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { env } from '../config/env';
 import { AdminUser } from '../domain/entities/AdminUser';
+import { Dataset } from '../domain/entities/Dataset';
+import { DatasetFile } from '../domain/entities/DatasetFile';
+import { DatasetAttachment } from '../domain/entities/DatasetAttachment';
 
 
 
@@ -17,6 +20,9 @@ export const AppDataSource = new DataSource({
   logging: env.NODE_ENV !== 'production',
   entities: [
     AdminUser,
+    Dataset,
+    DatasetFile,
+    DatasetAttachment,
   ],
   migrations: [
     "src/db/migrations/*.ts"

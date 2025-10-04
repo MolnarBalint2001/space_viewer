@@ -14,5 +14,6 @@ export const routes = {
     analytics: "/analytics",
     coverage: "/coverage",
     mapViewer: "/map-viewer",
+    datasets: "/datasets",
 
 }

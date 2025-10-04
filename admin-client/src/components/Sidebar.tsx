@@ -12,6 +12,12 @@ const menuItems = [
         path: routes.dashboard,
     },
     {
+        id: "datasets",
+        label: "Datasetek",
+        icon: "pi pi-folder",
+        path: routes.datasets,
+    },
+    {
         id: "map-viewer",
         label: "Map Viewer",
         icon: "pi pi-map",

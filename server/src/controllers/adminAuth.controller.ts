@@ -34,7 +34,8 @@ export async function login (req: Request, res: Response) {
 
     const token = jwt.sign(
         {
-            userId: adminUser.id, // admin fix ID, vagy DB-ből az admin ID-ja
+            id: adminUser.id,
+            userId: adminUser.id, // kompatibilitás a régi kliensekkel
             email,
         },
         env.ADMIN_JWT_SECRET,

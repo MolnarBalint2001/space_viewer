@@ -2,7 +2,6 @@ import { type Request, type Response, type NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { AppDataSource } from '../db/dataSource';
-import { User } from '../domain/entities/User';
 import { NotFound, Unauthorized } from '../utils/error';
 import { AdminUser } from '../domain/entities/AdminUser';
 import { logger } from '../utils/logger';
@@ -46,7 +45,9 @@ export function adminAuth(options: AuthOptions = {}) {
         clockTolerance: clockToleranceSec, // kis tolerancia
       }) as any;
 
-      const user = await adminUserRepo().findOneBy({ id: payload.id })
+      const userId = payload.id ?? payload.userId;
+      if (!userId) throw new Unauthorized("Hibás vagy lejárt token!");
+      const user = await adminUserRepo().findOneBy({ id: userId })
       if (!user) throw new NotFound("Nincs az azonosítóval admin felhasználó")
 
       req.user = user as any;

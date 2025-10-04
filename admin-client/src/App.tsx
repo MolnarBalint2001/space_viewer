@@ -6,7 +6,9 @@ import { routes } from "./config/routes";
 import { LoginPage } from "./features/login/LoginPage";
 import { DashboardPage } from "./features/dashboard/DashboardPage";
 import { MapViewerPage } from "./features/mapViewer/MapViewerPage";
+import { DatasetManagerPage } from "./features/datasets/DatasetManagerPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RealtimeProvider } from "./components/RealtimeProvider";
 
 import "primereact/resources/themes/lara-dark-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -20,8 +22,9 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
                     <ToastProvider>
-                        <Layout>
-                            <Routes>
+                        <RealtimeProvider>
+                            <Layout>
+                                <Routes>
                                 {/* Védett útvonalak */}
                                 <Route element={<ProtectedRoute />}>
                                 <Route
@@ -36,7 +39,10 @@ function App() {
                                     path={routes.mapViewer}
                                     element={<MapViewerPage />}
                                 />
-                                   
+                                <Route
+                                    path={routes.datasets}
+                                    element={<DatasetManagerPage />}
+                                />
                                 </Route>
 
                                 <Route
@@ -45,6 +51,7 @@ function App() {
                                 />
                             </Routes>
                         </Layout>
+                        </RealtimeProvider>
                     </ToastProvider>
                 </AuthProvider>
             </QueryClientProvider>

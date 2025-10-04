@@ -6,12 +6,14 @@ type ToastContextType = {
     notify: (options: ToastMessage) => void;
     notifySuccess: (message: string, summary?: string) => void;
     notifyError: (message: string, summary?: string) => void;
+    notifyInfo: (message: string, summary?: string) => void;
 };
 
 const defaultContext: ToastContextType = {
     notify: () => {},
     notifySuccess: () => {},
     notifyError: () => {},
+    notifyInfo: () => {},
 };
 
 const ToastContext = createContext<ToastContextType>(defaultContext);
@@ -43,8 +45,19 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
+    const notifyInfo = (message: string, summary = "Feldolgozás") => {
+        notify({
+            severity: "info",
+            summary,
+            detail: message,
+            life: 3000,
+        });
+    };
+
     return (
-        <ToastContext.Provider value={{ notify, notifySuccess, notifyError }}>
+        <ToastContext.Provider
+            value={{ notify, notifySuccess, notifyError, notifyInfo }}
+        >
             {/* Globális toast komponens */}
             <Toast ref={toastRef} />
             {children}

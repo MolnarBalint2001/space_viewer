@@ -1,4 +1,5 @@
 import { logger } from "../utils/logger"
+import { registerDatasetProcessingConsumer } from "./datasetProcessing.consumer"
 
 /**
  * RabbitMQ Consumer függvények inicializálása
@@ -8,7 +9,7 @@ export default async function initializeRabbitMqConsumers() {
         logger.info("Initializing RabbitMQ consumers…")
 
         const consumers = [
-            
+            registerDatasetProcessingConsumer,
         ] as (()=>Promise<any>)[]
         await Promise.all(consumers.map((fn) => fn()))
     }
