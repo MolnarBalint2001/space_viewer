@@ -1,0 +1,8 @@
+@import "tailwindcss" important;
+:root{
+  font-size: 14px !important;
+}
+
+div.leaflet-container{
+  background: var(--color-gray-950);
+}

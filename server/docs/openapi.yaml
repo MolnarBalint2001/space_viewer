@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: TetoB2C Envimap API
+  version: 1.0.0
+  description: >
+    Express + TypeORM + Redis alapú API.  
+    Funkciók: autentikáció (regisztráció, login, e-mail megerősítés), felhasználó CRUD, healthcheck.
+
+servers:
+  - url: http://localhost:3000
+    description: Local dev
+
+tags:
+  - name: Health
+  - name: AdminAuth
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Healthcheck
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+
+  /admin/auth/login:
+    post:
+      tags: [AdminAuth]
+      summary: Bejelentkezés - Admin (JWT)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginDto" }
+            examples:
+              example:
+                value:
+                  email: user@example.com
+                  password: Passw0rd!
+      responses:
+        "200":
+          description: Sikeres bejelentkezés
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token]
+                properties:
+                  token:
+                    type: string
+                    description: JWT bearer token
+        "401":
+          description: Hibás hitelesítő adatok
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    
+  schemas:
+    LoginDto:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    # === Hibák ===
+    ErrorResponse:
+      type: object
+      properties:
+        error: { type: string, example: INTERNAL_SERVER_ERROR }
+        message:
+          type: string
+          example: Something went wrong
+
+    ValidationError:
+      type: object
+      properties:
+        error: { type: string, example: VALIDATION_ERROR }
+        details:
+          type: object
+          description: Zod flatten() struktúra
+          additionalProperties: true

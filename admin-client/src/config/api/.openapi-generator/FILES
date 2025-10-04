@@ -1,0 +1,15 @@
+.gitignore
+.npmignore
+api.ts
+base.ts
+common.ts
+configuration.ts
+docs/AdminAuthApi.md
+docs/AdminAuthLoginPost200Response.md
+docs/ErrorResponse.md
+docs/HealthApi.md
+docs/HealthGet200Response.md
+docs/LoginDto.md
+docs/ValidationError.md
+git_push.sh
+index.ts
