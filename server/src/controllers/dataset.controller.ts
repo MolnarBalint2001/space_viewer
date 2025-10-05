@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+﻿import { Request, Response } from "express";
 import { In } from "typeorm";
 import { promises as fs, createReadStream } from "node:fs";
 import path from "node:path";
@@ -31,6 +31,7 @@ import {
 } from "../services/dataset.service";
 import { putObject, presignedGetUrl } from "../services/minio.service";
 import { publishDomainEvent } from "../services/eventBus.service";
+import { embedDataset } from "../services/embeddingGateway.service";
 import { DatasetFileUploadedEvent } from "../@types/event.type";
 import { BadRequest, NotFound } from "../utils/error";
 import { logger } from "../utils/logger";
@@ -63,8 +64,12 @@ export async function create(req: Request, res: Response) {
     status: DatasetStatus.EMPTY,
   });
 
-  await datasetRepo().save(dataset);
-  const detail = await composeDetail(dataset, {
+
+  const savedDataset = await datasetRepo().save(dataset);
+
+  await embedDataset(savedDataset);
+
+  const detail = await composeDetail(savedDataset, {
     includeDownloads: false,
     includeObjectKeys: true,
   });
@@ -88,14 +93,30 @@ export async function update(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
-  if (body.name !== undefined) dataset.name = body.name;
-  if (body.description !== undefined) dataset.description = body.description ?? null;
-  if (body.visibility !== undefined) dataset.visibility = body.visibility;
+  const nextName = body.name !== undefined ? body.name : dataset.name;
+  const currentDescription = dataset.description ?? null;
+  const nextDescription =
+    body.description !== undefined ? body.description ?? null : currentDescription;
 
-  await datasetRepo().save(dataset);
+  const nameChanged = nextName !== dataset.name;
+  const descriptionChanged = nextDescription !== currentDescription;
+  const shouldReembed = nameChanged || descriptionChanged;
+
+  dataset.name = nextName;
+  dataset.description = nextDescription;
+  if (body.visibility !== undefined) {
+    dataset.visibility = body.visibility;
+  }
+
+  const savedDataset = await datasetRepo().save(dataset);
+
+  if (shouldReembed) {
+    await embedDataset(savedDataset);
+  }
+
   const detail = await getDatasetDetailForOwner(datasetId, user.id, {
     includeDownloads: true,
     includeObjectKeys: true,
@@ -114,19 +135,19 @@ export async function uploadTifs(req: Request, res: Response) {
   const files = (req.files as Express.Multer.File[]) ?? [];
 
   if (!files.length) {
-    throw new BadRequest("Legalább egy TIF fájlt fel kell tölteni");
+    throw new BadRequest("LegalĂˇbb egy TIF fĂˇjlt fel kell tĂ¶lteni");
   }
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   try {
     for (const file of files) {
       if (!ensureTifExtension(file.originalname)) {
         throw new BadRequest(
-          `${file.originalname} nem TIF formátumú. Csak .tif vagy .tiff engedélyezett.`
+          `${file.originalname} nem TIF formĂˇtumĂş. Csak .tif vagy .tiff engedĂ©lyezett.`
         );
       }
 
@@ -176,19 +197,19 @@ export async function uploadAttachments(req: Request, res: Response) {
   const files = (req.files as Express.Multer.File[]) ?? [];
 
   if (!files.length) {
-    throw new BadRequest("Legalább egy mellékletet fel kell tölteni");
+    throw new BadRequest("LegalĂˇbb egy mellĂ©kletet fel kell tĂ¶lteni");
   }
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   try {
     for (const file of files) {
       const ext = path.extname(file.originalname).toLowerCase();
       if (ext !== ".pdf") {
-        throw new BadRequest(`${file.originalname} nem PDF formátumú.`);
+        throw new BadRequest(`${file.originalname} nem PDF formĂˇtumĂş.`);
       }
 
       const objectKey = `datasets/${dataset.id}/attachments/${randomUUID()}${ext}`;
@@ -222,7 +243,7 @@ export async function generateShareLink(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   dataset.shareToken = dataset.shareToken ?? createShareToken();
@@ -238,7 +259,7 @@ export async function revokeShareLink(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   dataset.shareToken = null;
@@ -256,13 +277,13 @@ export async function getFileDownloadUrl(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   const file = await datasetFileRepo().findOne({
     where: { id: fileId, datasetId },
   });
-  if (!file) throw new NotFound("A fájl nem található");
+  if (!file) throw new NotFound("A fĂˇjl nem talĂˇlhatĂł");
 
   const url = await presignedGetUrl(file.objectKey);
   return res.json({ url });
@@ -274,14 +295,14 @@ export async function getFileMbtilesDownloadUrl(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   const file = await datasetFileRepo().findOne({
     where: { id: fileId, datasetId },
   });
   if (!file || !file.mbtilesKey) {
-    throw new NotFound("A feldolgozott MBTiles nem érhető el");
+    throw new NotFound("A feldolgozott MBTiles nem Ă©rhetĹ‘ el");
   }
 
   const url = await presignedGetUrl(file.mbtilesKey);
@@ -294,13 +315,13 @@ export async function getAttachmentDownloadUrl(req: Request, res: Response) {
 
   const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
   if (!dataset || dataset.ownerId !== user.id) {
-    throw new NotFound("A kutatás nem található");
+    throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
   const attachment = await datasetAttachmentRepo().findOne({
     where: { id: attachmentId, datasetId },
   });
-  if (!attachment) throw new NotFound("A melléklet nem található");
+  if (!attachment) throw new NotFound("A mellĂ©klet nem talĂˇlhatĂł");
 
   const url = await presignedGetUrl(attachment.objectKey);
   return res.json({ url });
@@ -332,7 +353,7 @@ export async function getSharedFileDownloadUrl(req: Request, res: Response) {
 
   const file = detail.files.find((f) => f.id === fileId);
   if (!file || !file.objectKey) {
-    throw new NotFound("A fájl nem található a megosztott kutatásban");
+    throw new NotFound("A fĂˇjl nem talĂˇlhatĂł a megosztott kutatĂˇsban");
   }
 
   const url = await presignedGetUrl(file.objectKey);
@@ -350,7 +371,7 @@ export async function getSharedMbtilesUrl(req: Request, res: Response) {
 
   const file = detail.files.find((f) => f.id === fileId);
   if (!file || !file.mbtilesKey) {
-    throw new NotFound("Ez a fájl még nem készült el MBTiles formátumban");
+    throw new NotFound("Ez a fĂˇjl mĂ©g nem kĂ©szĂĽlt el MBTiles formĂˇtumban");
   }
 
   const url = await presignedGetUrl(file.mbtilesKey);
@@ -368,7 +389,7 @@ export async function getSharedAttachmentDownloadUrl(req: Request, res: Response
 
   const attachment = detail.attachments.find((a) => a.id === attachmentId);
   if (!attachment || !attachment.objectKey) {
-    throw new NotFound("A melléklet nem érhető el");
+    throw new NotFound("A mellĂ©klet nem Ă©rhetĹ‘ el");
   }
 
   const url = await presignedGetUrl(attachment.objectKey);
@@ -392,7 +413,7 @@ export async function getPublicFileDownloadUrl(req: Request, res: Response) {
   });
   const file = detail.files.find((f) => f.id === fileId);
   if (!file || !file.objectKey) {
-    throw new NotFound("A fájl nem található a nyilvános kutatásban");
+    throw new NotFound("A fĂˇjl nem talĂˇlhatĂł a nyilvĂˇnos kutatĂˇsban");
   }
   const url = await presignedGetUrl(file.objectKey);
   return res.json({ url });
@@ -406,7 +427,7 @@ export async function getPublicMbtilesUrl(req: Request, res: Response) {
   });
   const file = detail.files.find((f) => f.id === fileId);
   if (!file || !file.mbtilesKey) {
-    throw new NotFound("Ez a fájl még nem készült el MBTiles formátumban");
+    throw new NotFound("Ez a fĂˇjl mĂ©g nem kĂ©szĂĽlt el MBTiles formĂˇtumban");
   }
   const url = await presignedGetUrl(file.mbtilesKey);
   return res.json({ url });
@@ -420,7 +441,7 @@ export async function getPublicAttachmentDownloadUrl(req: Request, res: Response
   });
   const attachment = detail.attachments.find((a) => a.id === attachmentId);
   if (!attachment || !attachment.objectKey) {
-    throw new NotFound("A melléklet nem érhető el");
+    throw new NotFound("A mellĂ©klet nem Ă©rhetĹ‘ el");
   }
   const url = await presignedGetUrl(attachment.objectKey);
   return res.json({ url });
@@ -450,7 +471,7 @@ export async function search(req: Request, res: Response) {
 
     const repo = datasetRepo();
 
-    // Query builder: Case-insensitive startswith keres�s a name field-en
+    // Query builder: Case-insensitive startswith keresďż˝s a name field-en
     const matchingDatasets = await repo
       .createQueryBuilder('dataset')
       .where('LOWER(dataset.name) LIKE LOWER(:q) || \'%\'', { q: q.trim() })
@@ -500,8 +521,8 @@ export async function search(req: Request, res: Response) {
 
     return res.json(payload);
   } catch (error) {
-    console.error('Hiba a keres�skor:', error);
-    return res.status(500).json({ error: 'Keres�si hiba t�rt�nt' });
+    console.error('Hiba a keresďż˝skor:', error);
+    return res.status(500).json({ error: 'Keresďż˝si hiba tďż˝rtďż˝nt' });
   }
 }
 
@@ -539,3 +560,11 @@ export async function getDatasetFile(req: Request, res: Response) {
 
   return res.json({ file: serialized });
 }
+
+
+
+
+
+
+
+

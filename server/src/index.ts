@@ -10,6 +10,7 @@ import { connectRedis, redis } from "./services/redis";
 import { logger } from "./utils/logger";
 import { initMinio } from "./services/minio.service";
 import { closeWebsocket, initWebsocket } from "./services/websocket.service";
+import { ensureCollection } from "./clients/qdarant.client";
 // Avoid logging env secrets in production
 
 const port = env.PORT;
@@ -30,6 +31,9 @@ async function main() {
 
     await initMinio();
     logger.info("MinIO connected and bucket ready")
+
+    await ensureCollection();
+    logger.info("QDarant collection initialization")
 
     const server = http.createServer(app);
     initWebsocket(server);

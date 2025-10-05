@@ -26,9 +26,9 @@ export const MapSidebar = () => {
                     {/* TODO: Pattern detection configuration */}
                 </TabPanel>
                 <TabPanel header="Labeled features">
-                    <div className="h-[80vh]">
+                    {/*<div className="h-[80vh]">
                         <LabeledFeatures isActive={activeIndex === 1} />
-                    </div>
+                    </div>*/}
                 </TabPanel>
                 <TabPanel header="Similar researches">
                     <div className="h-[80vh]">

@@ -1,52 +1,96 @@
+﻿import { useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 import { SimilarResearchItem, SimilarResearchEntry } from "./SimilarResearchItem";
 
-const testData: SimilarResearchEntry[] = [
-  {
-    id: "dataset-2025",
-    title: "Nap 2025",
-    description: "A Nap felsz�n�nek komperiz�ci�s kutat�sa 2024-hez k�pest.",
-    createdAt: "2025-10-04T18:11:00.808Z",
-    imageUrl: "https://images.metmuseum.org/CRDImages/ep/original/DT1567.jpg",
-  },
-  {
-    id: "dataset-aurora",
-    title: "Aur�ra 10 �ves trendsor",
-    description: "Megfigyel�si adatok a sarki f�nyek intenzit�s�r�l, spektrumokr�l �s m�gneses mez�kr�l.",
-    createdAt: "2025-09-12T09:30:00.000Z",
-    imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=320&q=80",
-  },
-  {
-    id: "dataset-corona",
-    title: "Korona h�eloszl�s t�rk�pek",
-    description: "�j h�t�rk�pek a koron�ban v�gzett URI spektroszk�piai m�r�sek alapj�n.",
-    createdAt: "2025-07-28T14:05:12.000Z",
-    imageUrl: "https://images.unsplash.com/photo-1470115636492-6d2b56f9146e?auto=format&fit=crop&w=320&q=80",
-  },
-
-  {
-    id: "dataset-2025",
-    title: "Nap 2025",
-    description: "A Nap felsz�n�nek komperiz�ci�s kutat�sa 2024-hez k�pest.",
-    createdAt: "2025-10-04T18:11:00.808Z",
-    imageUrl: "https://images.metmuseum.org/CRDImages/ep/original/DT1567.jpg",
-  },
-  {
-    id: "dataset-aurora",
-    title: "Aur�ra 10 �ves trendsor",
-    description: "Megfigyel�si adatok a sarki f�nyek intenzit�s�r�l, spektrumokr�l �s m�gneses mez�kr�l.",
-    createdAt: "2025-09-12T09:30:00.000Z",
-    imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=320&q=80",
-  },
-  {
-    id: "dataset-corona",
-    title: "Korona h�eloszl�s t�rk�pek",
-    description: "�j h�t�rk�pek a koron�ban v�gzett URI spektroszk�piai m�r�sek alapj�n.",
-    createdAt: "2025-07-28T14:05:12.000Z",
-    imageUrl: "https://images.unsplash.com/photo-1470115636492-6d2b56f9146e?auto=format&fit=crop&w=320&q=80",
-  },
-];
+type SimilarResearchApiItem = {
+  datasetId: string;
+  name?: string;
+  description?: string | null;
+  previewImageUrl?: string | null;
+  createdAt?: string | null;
+  score?: number | null;
+  tilesetKey?: string | null;
+};
 
 export const SimilarResearch = () => {
+  const [searchParams] = useSearchParams();
+  const tilesKey = searchParams.get("tilesKey");
+
+  const [items, setItems] = useState<SimilarResearchEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const fetchSimilars = useCallback(async () => {
+    if (!tilesKey) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    try {
+      const response = await axios.get("http://localhost:3000/api/datasets/similar", {
+        params: { tilesKey },
+        signal: controller.signal,
+      });
+
+      const apiItems: SimilarResearchApiItem[] = response.data?.items ?? [];
+      const mapped: SimilarResearchEntry[] = apiItems
+        .filter((item) => item?.datasetId)
+        .map((item) => ({
+          id: item.datasetId,
+          title: item.name ?? "Unknown dataset",
+          description: item.description ?? null,
+          imageUrl: item.previewImageUrl ?? null,
+          createdAt: item.createdAt ?? null,
+          score: item.score ?? null,
+          tilesetKey: item.tilesetKey ?? null,
+        }));
+
+      setItems(mapped);
+    } catch (error: unknown) {
+      if (axios.isCancel && axios.isCancel(error)) {
+        return;
+      }
+
+      console.error("Failed to load similar datasets", error);
+      setError("Unable to load similar researches right now.");
+      setItems([]);
+    } finally {
+      setIsLoading(false);
+      abortRef.current = null;
+    }
+  }, [tilesKey]);
+
+  useEffect(() => {
+    if (!tilesKey) {
+      setItems([]);
+      setError(null);
+      setIsLoading(false);
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+      return;
+    }
+
+    fetchSimilars();
+
+    return () => {
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+    };
+  }, [tilesKey, fetchSimilars]);
+
   return (
     <section className="flex flex-col gap-4 p-4 text-white">
       <header className="flex flex-col gap-1">
@@ -56,13 +100,33 @@ export const SimilarResearch = () => {
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 overflow-x-hidden" >
-        {testData.map((entry) => (
+      <div className="flex flex-col gap-4 overflow-x-hidden">
+        {!tilesKey ? (
+          <p className="text-sm text-white/60">
+            Select a dataset on the map to see related researches.
+          </p>
+        ) : null}
+
+        {tilesKey && isLoading ? (
+          <p className="text-sm text-white/60">Looking for similar researches...</p>
+        ) : null}
+
+        {tilesKey && !isLoading && error ? (
+          <p className="text-sm text-red-200">{error}</p>
+        ) : null}
+
+        {tilesKey && !isLoading && !error && items.length === 0 ? (
+          <p className="text-sm text-white/60">No similar researches found for this dataset yet.</p>
+        ) : null}
+
+        {items.map((entry) => (
           <SimilarResearchItem key={entry.id} entry={entry} />
         ))}
       </div>
     </section>
   );
 };
+
+
 
 

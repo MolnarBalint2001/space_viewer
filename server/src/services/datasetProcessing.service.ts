@@ -351,7 +351,9 @@ export async function processDatasetFile(event: DatasetFileUploadedEvent) {
     file.mbtilesSize = stats.size.toString();
     file.status = DatasetFileStatus.READY;
     file.processedAt = new Date();
-    await datasetFileRepo().save(file);
+    const savedRecord = await datasetFileRepo().save(file);
+
+    
 
     const updatedDataset = await recalculateDatasetStatus(dataset.id);
 

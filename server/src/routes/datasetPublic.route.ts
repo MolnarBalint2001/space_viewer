@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as DatasetController from "../controllers/dataset.controller";
+import * as DatasetSimilarController from "../controllers/datasetSimilar.controller";
 
 const router = Router();
 
@@ -35,5 +36,7 @@ router.get("/getDefault", DatasetController.getDefault);
 router.get("/search", DatasetController.search);
 
 router.get("/getDatasetFile/:datasetId", DatasetController.getDatasetFile);
+
+router.get("/similar", DatasetSimilarController.findSimilarByTilesKey);
 
 export default router;
