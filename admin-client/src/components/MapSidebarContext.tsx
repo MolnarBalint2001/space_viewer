@@ -1,5 +1,5 @@
 import type { LineString } from 'geojson';
-import { createContext, useState, useContext, type PropsWithChildren } from 'react';
+import { createContext, useState, useContext, type PropsWithChildren, useCallback } from 'react';
 import type { PatternSearchRunResponse } from '../types/patternSearch';
 
 type ActiveDatasetInfo = {
@@ -19,6 +19,8 @@ type MapSidebarContextValue = {
   setCurrentDataset: (value: ActiveDatasetInfo | null) => void;
   lastSearchResult: PatternSearchRunResponse | null;
   setLastSearchResult: (value: PatternSearchRunResponse | null) => void;
+  labeledFeaturesRefreshToken: number;
+  triggerLabeledFeaturesReload: () => void;
 };
 
 const defaultContext: MapSidebarContextValue = {
@@ -31,6 +33,8 @@ const defaultContext: MapSidebarContextValue = {
   setCurrentDataset: () => undefined,
   lastSearchResult: null,
   setLastSearchResult: () => undefined,
+  labeledFeaturesRefreshToken: 0,
+  triggerLabeledFeaturesReload: () => undefined,
 };
 
 const MapSidebarContext = createContext<MapSidebarContextValue>(defaultContext);
@@ -40,6 +44,11 @@ export const MapSidebarProvider = ({ children }: PropsWithChildren) => {
   const [activeLineString, setActiveLineString] = useState<LineString | null>(null);
   const [currentDataset, setCurrentDataset] = useState<ActiveDatasetInfo | null>(null);
   const [lastSearchResult, setLastSearchResult] = useState<PatternSearchRunResponse | null>(null);
+  const [labeledFeaturesRefreshToken, setLabeledFeaturesRefreshToken] = useState<number>(0);
+
+  const triggerLabeledFeaturesReload = useCallback(() => {
+    setLabeledFeaturesRefreshToken((prev) => prev + 1);
+  }, []);
 
   const toggleOpened = () => {
     setIsOpened((prev) => !prev);
@@ -59,6 +68,8 @@ export const MapSidebarProvider = ({ children }: PropsWithChildren) => {
     setCurrentDataset,
     lastSearchResult,
     setLastSearchResult,
+    labeledFeaturesRefreshToken,
+    triggerLabeledFeaturesReload,
   };
 
   return (

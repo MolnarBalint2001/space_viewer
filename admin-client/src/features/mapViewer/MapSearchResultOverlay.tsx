@@ -25,7 +25,7 @@ export const MapSearchResultOverlay = ({ activeDatasetFileId }: MapSearchResultO
   const previewUrl = buildPreviewUrl(result.previewUrl);
 
   return (
-    <div className="absolute left-16 top-4 z-[900] max-w-sm">
+    <div className="absolute left-16 top-18 z-[900] max-w-sm">
       <Card title="Mintakeresés találat" className="bg-slate-900/80 border border-slate-700 text-slate-100">
         <div className="space-y-3 text-sm">
           <div>

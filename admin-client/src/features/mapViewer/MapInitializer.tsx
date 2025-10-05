@@ -21,7 +21,7 @@ export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
 
     const map = useMap();
     const {notifyError, notifySuccess} = useToast();
-    const { setActiveLineString, activeLineString } = useMapSidebar();
+    const { setActiveLineString, activeLineString, triggerLabeledFeaturesReload } = useMapSidebar();
 
     const [searchParams] = useSearchParams();
     const tilesKey = searchParams.get("tilesKey");
@@ -105,6 +105,7 @@ export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
   
               console.log('FeatureCollection:', featureCollection);
               setPolygons(featureCollection);  // State: Teljes GeoJSON objektum
+              triggerLabeledFeaturesReload();
             notifySuccess("Polygon successfully created.");
         }
         catch(error){
@@ -113,7 +114,7 @@ export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
         finally{
             setIsSaving(false);
         }
-    }, [geom, tilesKey]);
+    }, [geom, tilesKey, triggerLabeledFeaturesReload]);
 
    
 

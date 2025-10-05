@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const menuItems = [
     {
         id: "dashboard",
-        label: "Térkép",
+        label: "Patterns",
         icon: "pi pi-chart-bar",
         path: routes.dashboard,
     },

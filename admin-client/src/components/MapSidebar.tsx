@@ -9,10 +9,8 @@ import { PATTERN_SERVICE_URL } from '../config/globals';
 import { useAuth } from './AuthContext';
 import type { PatternSearchRunResponse } from '../types/patternSearch';
 import { buildPreviewUrl } from '../types/patternSearch';
-import { LabeledFeatures } from '../features/mapViewer/LabeledFeatures';
 import { SimilarResearch } from '../features/mapViewer/SimilarResearch';
 import { TabPanel, TabView } from 'primereact/tabview';
-import { PatternSearchDashboard } from '../features/dashboard/PatternSearchDashboard';
 
 
 
@@ -109,7 +107,7 @@ export const MapSidebar = () => {
     return (
       <div
         className={`${isOpened
-          ? 'w-[400px] opacity-100 pointer-events-auto'
+          ? 'w-full opacity-100 pointer-events-auto'
           : 'w-0 opacity-0 pointer-events-none'
           } bg-slate-800 shadow-lg transition-all duration-300 ease-in-out flex flex-col border-r border-slate-900 overflow-hidden`}
         style={{ height: 'calc(100vh - 58px)' }}

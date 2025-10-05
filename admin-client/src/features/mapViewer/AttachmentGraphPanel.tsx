@@ -61,8 +61,6 @@ export const AttachmentGraphPanel = ({ datasetId, heightClass = "h-64" }: Attach
   const [depth, setDepth] = useState<number>(DEFAULT_DEPTH);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const containerIdRef = useRef<string>(`graph-${Math.random().toString(36).slice(2, 10)}`);
-  const networkRef = useRef<Network | null>(null);
-  const neoVisRef = useRef<NeoVis | null>(null);
   const dataRef = useRef<GraphResponse | null>(null);
   const datasetIdRef = useRef<string | null>(null);
   const lastErrorRef = useRef<string | null>(null);
@@ -147,63 +145,156 @@ export const AttachmentGraphPanel = ({ datasetId, heightClass = "h-64" }: Attach
 
 
     console.log(containerIdRef)
-    // Your existing visConfig (it's compatible with vis.js options)
-    const visConfig = {
-      containerId: containerIdRef.current!,
-      physics: {
-        enabled: true,
-        stabilization: true,
-        barnesHut: {
-          springLength: 800,
-          avoidOverlap: 0.8,
-        },
+const visConfig = {
+    containerId: containerIdRef.current!,
+    physics: {
+      enabled: true,
+      stabilization: true,
+      barnesHut: {
+        springLength: 800,
+        avoidOverlap: 0.8,
       },
-      interaction: {
-        hover: true,
-        tooltipDelay: 120,
+    },
+    interaction: {
+      hover: true,
+      tooltipDelay: 120,
+    },
+    edges: {
+      color: { color: "#94a3b8", highlight: "#facc15" },
+      arrows: {
+        to: { enabled: true, scaleFactor: 0.6 },
       },
-      edges: {
-        color: { color: "#94a3b8", highlight: "#facc15" },
-        arrows: {
-          to: { enabled: true, scaleFactor: 0.6 },
-        },
-        smooth: { enabled: true, type: "dynamic", roundness: 0.4 },
+      smooth: { enabled: true, type: "dynamic", roundness: 0.4 },
+    },
+    nodes: {
+      borderWidth: 1,
+      borderWidthSelected: 2,
+      brokenImage: undefined,
+      chosen: true,
+      opacity: 1,
+      fixed: {
+        x: false,
+        y: false,
       },
-      nodes: {
-        shape: "dot",
-        borderWidth: 2,
-        font: {
-          color: "#e2e8f0",
-          face: "Inter, system-ui, sans-serif",
+      font: {
+        color: '#fff',
+        size: 14,
+        face: 'arial',
+        background: 'none',
+        strokeWidth: 0,
+        strokeColor: '#ffffff',
+        align: 'center',
+        multi: false,
+        vadjust: -20, // Move label above the icon for better visibility
+        bold: {
+          color: '#343434',
           size: 14,
+          face: 'arial',
+          vadjust: -20,
+          mod: 'bold',
+        },
+        ital: {
+          color: '#343434',
+          size: 14,
+          face: 'arial',
+          vadjust: -20,
+          mod: 'italic',
+        },
+        boldital: {
+          color: '#343434',
+          size: 14,
+          face: 'arial',
+          vadjust: -20,
+          mod: 'bold italic',
+        },
+        mono: {
+          color: '#343434',
+          size: 15,
+          face: 'courier new',
+          vadjust: -18,
+          mod: '',
         },
       },
-      layout: {
-        improvedLayout: true,
+      group: undefined,
+      heightConstraint: false,
+      hidden: false,
+      icon: {
+        face: 'FontAwesome',
+        size: 50,
+        color: '#2B7CE9', // Default color, overridden per node
       },
-    } as const;
+      image: undefined,
+      imagePadding: {
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+      },
+      labelHighlightBold: true,
+      level: undefined,
+      mass: 1,
+      physics: true,
+      scaling: {
+        min: 10,
+        max: 30,
+        label: {
+          enabled: false,
+          min: 14,
+          max: 30,
+          maxVisible: 30,
+          drawThreshold: 5,
+        },
+        
+      },
+      shadow: {
+        enabled: false,
+        color: 'rgba(0,0,0,0.5)',
+        size: 10,
+        x: 5,
+        y: 5,
+      },
+      shape: 'icon', // Use icon shape for Font Awesome icons
+      shapeProperties: {
+        borderDashes: false,
+        borderRadius: 6,
+        interpolation: false,
+        useImageSize: false,
+        useBorderWithImage: false,
+        coordinateOrigin: 'center',
+      },
+      size: 25,
+      title: undefined,
+      value: undefined,
+      widthConstraint: { minimum: 80, maximum: 150 }, // Ensure space for label
+    },
+    layout: {
+      improvedLayout: true,
+    },
+  } as const;
 
-    // Define color mapping based on node type
-    const nodeColorMap: { [key: string]: string } = {
-      tag: "#4CAF50", // Green for 'tag'
-      dataset: "#2196F3", // Blue for 'dataset'
-      // Add more types and colors as needed
-      default: "#94a3b8", // Fallback color for undefined types
-    };
-    // Transform data into vis.js format with type-based coloring
-    const nodes = graphQuery.data.nodes.map((n: any) => ({
-      id: n.key,
-      label: n.label || "Unnamed Node",
-      color: {
-        background: nodeColorMap[n.type] || nodeColorMap.default,
-        border: nodeColorMap[n.type] || nodeColorMap.default, // Optional: same color for border
-        highlight: {
-          background: nodeColorMap[n.type] ? nodeColorMap[n.type] + "CC" : nodeColorMap.default, // Slightly transparent for highlight
-          border: nodeColorMap[n.type] ? nodeColorMap[n.type] + "CC" : nodeColorMap.default,
+
+    // Transform data into vis.js format with type-based coloring and icons
+    const nodes = graphQuery.data.nodes.map((n: GraphNodeDto) => {
+      const colors = buildNodeColor(n);
+      return {
+        id: n.key,
+        label: n.label, // Includes emoji as fallback
+        shape: 'icon',
+        icon: {
+          face: 'FontAwesome',
+          code: n.type === 'dataset' ? '\uf1c0' : n.type === 'document' ? '\uf15b' : '\uf02b', // Font Awesome codes
+          size: n.type == "tag" ? 25 : n.type == "dataset" ? 70 : 40,
+          color: colors.border, // Use border color for icon
         },
-      },
-      // Add more props if available in your data
-    }));
+        color: colors,
+        font: {
+          ...visConfig.nodes.font,
+          vadjust: -20, // Adjust label position above icon
+        },
+        size: 25
+      };
+    });
+    console.log(nodes)
 
     const edges = graphQuery.data.edges?.map((e: any) => ({
       from: e.from,
