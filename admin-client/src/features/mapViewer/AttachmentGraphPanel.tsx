@@ -46,12 +46,12 @@ function buildNodeColor(node: GraphNodeDto) {
 function buildTooltip(node: GraphNodeDto): string {
   const props = node.properties ?? {};
   if (node.type === "dataset") {
-    return `Kutatás: ${node.label}\nID: ${props.datasetId ?? node.key}`;
+    return `Dataset: ${node.label}\nID: ${props.datasetId ?? node.key}`;
   }
   if (node.type === "document") {
-    return `Melléklet: ${node.label}\nID: ${props.attachmentId ?? node.key}`;
+    return `Attachment: ${node.label}\nID: ${props.attachmentId ?? node.key}`;
   }
-  return `Címke: ${node.label}`;
+  return `Tag: ${node.label}`;
 }
 
 export const AttachmentGraphPanel = ({ datasetId, heightClass = "h-64" }: AttachmentGraphPanelProps) => {
@@ -91,7 +91,7 @@ export const AttachmentGraphPanel = ({ datasetId, heightClass = "h-64" }: Attach
     queryKey,
     enabled: Boolean(activeNode && token),
     queryFn: async () => {
-      if (!activeNode) throw new Error("Nincs aktív csomópont");
+      if (!activeNode) throw new Error("No active node");
       const headers: Record<string, string> = {};
       if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -131,9 +131,9 @@ export const AttachmentGraphPanel = ({ datasetId, heightClass = "h-64" }: Attach
       (axios.isAxiosError(error) &&
         (error.response?.data?.message as string | undefined)) ||
       (error as Error)?.message ||
-      "Nem sikerült betölteni a gráfot";
+      "Failed to load graph";
     if (message !== lastErrorRef.current) {
-      notifyError(message, "Gráf betöltési hiba");
+      notifyError(message, "Graph load error");
       lastErrorRef.current = message;
     }
   }, [graphQuery.error, notifyError]);
@@ -151,8 +151,8 @@ const visConfig = {
       enabled: true,
       stabilization: true,
       barnesHut: {
-        springLength: 800,
-        avoidOverlap: 0.8,
+        springLength: 3600,
+        avoidOverlap: 4,
       },
     },
     interaction: {
@@ -335,7 +335,7 @@ const visConfig = {
   if (!datasetId) {
     return (
       <div className="rounded border border-slate-700 bg-slate-900/40 p-3 text-xs text-slate-400">
-        Válassz egy kutatást a gráf megjelenítéséhez.
+        Select a dataset to display the graph.
       </div>
     );
   }
@@ -343,10 +343,10 @@ const visConfig = {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-wide text-slate-400">Kapcsolati gráf</div>
+        <div className="text-xs uppercase tracking-wide text-slate-400">Relationship graph</div>
         <div className="flex items-center gap-2 text-xs text-slate-300">
           <label className="flex items-center gap-1">
-            Mélység:
+            Depth:
             <input
               type="number"
               min={1}
@@ -356,15 +356,15 @@ const visConfig = {
               className="w-16 rounded border border-slate-700 bg-slate-900/60 px-2 py-1 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-sky-500"
             />
           </label>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="rounded border border-slate-700 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:border-slate-500 hover:text-white"
-          >
-            Gyökér
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="rounded border border-slate-700 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:border-slate-500 hover:text-white"
+        >
+            Root
+        </button>
       </div>
+    </div>
 
       <div className={`relative ${heightClass} w-full overflow-hidden rounded border border-slate-700 bg-slate-950/60`}>
         <div ref={containerRef} id={containerIdRef.current} className="absolute inset-0" />
@@ -375,7 +375,7 @@ const visConfig = {
         ) : null}
         {graphQuery.isError ? (
           <div className="absolute inset-0 flex items-center justify-center text-xs text-rose-300">
-            Nem sikerült megjeleníteni a gráfot.
+            Unable to display the graph.
           </div>
         ) : null}
       </div>

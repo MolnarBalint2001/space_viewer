@@ -85,9 +85,9 @@ export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
 
               const response2 = await axios.get(`http://localhost:3000/api/polygon?tileKey=${tilesKey}`);
               const dbPolygons = response2.data.polygons;  // Array: [{ id, label, geom, ... }]
-              console.log('DB polygonok:', dbPolygons);
-  
-              // Átalakítás GeoJSON FeatureCollection-re
+              console.log('DB polygons:', dbPolygons);
+
+              // Convert into a GeoJSON FeatureCollection
               const featureCollection = {
                   type: 'FeatureCollection' as const,
                   features: dbPolygons.map((polygon: any) => ({
@@ -97,14 +97,14 @@ export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
                           label: polygon.label,
                           creatorUserId: polygon.creatorUserId,
                           creatorUserName: polygon.creatorUserName,
-                          // További properties, ha kell
+                          // Additional properties can go here if needed
                       },
-                      geometry: polygon.geom,  // Közvetlenül a DB geom (Polygon GeoJSON)
+                      geometry: polygon.geom,  // Direct use of the DB geom (Polygon GeoJSON)
                   })),
               };
-  
+
               console.log('FeatureCollection:', featureCollection);
-              setPolygons(featureCollection);  // State: Teljes GeoJSON objektum
+              setPolygons(featureCollection);  // State: complete GeoJSON object
               triggerLabeledFeaturesReload();
             notifySuccess("Polygon successfully created.");
         }

@@ -485,7 +485,7 @@ def draw_debug_image(
     if len(pattern_pixels):
         pts = [(float(col), float(row)) for row, col in pattern_pixels]
         pts_int = np.asarray(pts, dtype=np.int32).reshape((-1, 1, 2))
-        cv2.polylines(canvas, [pts_int], isClosed=False, color=(0, 0, 255), thickness=2)
+        cv2.polylines(canvas, [pts_int], isClosed=False, color=(0, 0, 255), thickness=24)
 
     for row, col in stars:
         cv2.circle(canvas, (int(round(col)), int(round(row))), 3, (0, 255, 255), 1)
@@ -493,7 +493,7 @@ def draw_debug_image(
     for match in matches:
         pts = [(float(col), float(row)) for row, col in match.points]
         pts_int = np.asarray(pts, dtype=np.int32).reshape((-1, 1, 2))
-        cv2.polylines(canvas, [pts_int], isClosed=False, color=(0, 255, 0), thickness=2)
+        cv2.polylines(canvas, [pts_int], isClosed=False, color=(0, 255, 0), thickness=24)
         anchor = match.points[0]
         cv2.circle(canvas, (int(round(anchor[1])), int(round(anchor[0]))), 4, (0, 165, 255), -1)
 

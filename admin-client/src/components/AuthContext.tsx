@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState } from "react";
 
-// A JWT alapján értelmezett user típus
+// User type inferred from the JWT payload
 type AuthUser = {
     email: string;
     id: string;
@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthContextType>(defaultContext);
 
 export const useAuth = () => useContext(AuthContext);
 
-// 🧠 Helper: Lokál tárból kiolvassa a JWT-t és visszaadja a user-t
+// Helper: read the JWT from localStorage and return the parsed user
 function getUserFromLocalStorage(): AuthUser {
     try {
         const token = localStorage.getItem("token");

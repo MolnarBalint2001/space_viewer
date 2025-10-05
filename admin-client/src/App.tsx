@@ -26,7 +26,7 @@ function App() {
                         <RealtimeProvider>
                             <Layout>
                                 <Routes>
-                                {/* Védett útvonalak */}
+                                {/* Protected routes */}
                                 <Route element={<ProtectedRoute />}>
                                 <Route
                                     path="/" 

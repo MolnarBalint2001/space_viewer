@@ -13,7 +13,7 @@ const menuItems = [
     },
     {
         id: "datasets",
-        label: "Datasetek",
+        label: "Datasets",
         icon: "pi pi-folder",
         path: routes.datasets,
     },
@@ -25,7 +25,7 @@ const menuItems = [
     },
     {
         id: "graph",
-        label: "Kapcsolati gráf",
+        label: "Graph explorer",
         icon: "pi pi-share-alt",
         path: routes.graph,
     },
@@ -63,7 +63,7 @@ export const Sidebar = () => {
                             <div className="transition-opacity duration-200 p-4">
                                
                                 <p className="text-sm text-gray-500">
-                                    Irányítópult
+                                    Dashboard
                                 </p>
                             </div>
                         )}
@@ -79,7 +79,7 @@ export const Sidebar = () => {
                             !lateOpen ? "hidden" : ""
                         }`}
                     >
-                        Navigáció
+                        Navigation
                     </h2>
                 </div>
 
@@ -127,7 +127,7 @@ export const Sidebar = () => {
                         <Button
                             icon={"pi pi-user"}
                             text
-                            label="Profil"
+                            label="Profile"
                             severity="secondary"
                         ></Button>
                         <Button

@@ -21,7 +21,7 @@ export const Navbar = () => {
 
                 <img src={AdminLogo} alt="" className="h-16" />
                 <span className="text-2xl font-bold ">
-                    NASA Space Viewer
+                    AstraLink
                 </span>
             </div>
             <div></div>

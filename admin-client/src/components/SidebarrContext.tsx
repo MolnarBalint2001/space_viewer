@@ -15,7 +15,7 @@ const SidebarContext = React.createContext<SidebarContextValue | undefined>(unde
 type SidebarProviderProps = {
   children: React.ReactNode;
   defaultOpen?: boolean;
-  persistKey?: string; // localStorage kulcs (opcionális)
+  persistKey?: string; // optional localStorage key
 };
 
 export const SidebarProvider: React.FC<SidebarProviderProps> = ({
@@ -53,6 +53,6 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
 
 export const useSidebar = () => {
   const ctx = React.useContext(SidebarContext);
-  if (!ctx) throw new Error("useSidebar csak SidebarProvider-en belül használható");
+  if (!ctx) throw new Error("useSidebar must be used within a SidebarProvider");
   return ctx;
 };

@@ -28,7 +28,7 @@ export const GraphExplorerPage = () => {
 
   const datasetOptions = useMemo<DatasetOption[]>(() => {
     return (datasetsQuery.data ?? []).map((dataset) => ({
-      label: dataset.name ?? dataset.id ?? "Ismeretlen kutatás",
+      label: dataset.name ?? dataset.id ?? "Unknown dataset",
       value: dataset.id!,
     }));
   }, [datasetsQuery.data]);
@@ -55,13 +55,13 @@ export const GraphExplorerPage = () => {
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div className="flex-1">
               <span className="block text-xs uppercase tracking-wide text-slate-400">
-                Kutatás kiválasztása
+                Select dataset
               </span>
               <Dropdown
                 value={selectedDatasetId}
                 onChange={handleDatasetChange}
                 options={datasetOptions}
-                placeholder={datasetsQuery.isLoading ? "Töltés..." : "Válassz kutatást"}
+                placeholder={datasetsQuery.isLoading ? "Loading..." : "Choose dataset"}
                 className="w-full md:w-72"
                 showClear
               />
@@ -69,12 +69,12 @@ export const GraphExplorerPage = () => {
             {selectedDataset ? (
               <div className="text-xs text-slate-400">
                 <div>
-                  <span className="font-semibold text-slate-200">Állapot:</span> {selectedDataset.status}
+                  <span className="font-semibold text-slate-200">Status:</span> {selectedDataset.status}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-200">Fájlok:</span> {selectedDataset.fileCount}
+                  <span className="font-semibold text-slate-200">Files:</span> {selectedDataset.fileCount}
                   {" · "}
-                  <span className="font-semibold text-slate-200">Mellékletek:</span> {selectedDataset.attachmentCount}
+                  <span className="font-semibold text-slate-200">Attachments:</span> {selectedDataset.attachmentCount}
                 </div>
               </div>
             ) : null}
@@ -83,17 +83,17 @@ export const GraphExplorerPage = () => {
           {datasetsQuery.isLoading ? (
             <div className="flex items-center gap-2 text-sm text-slate-400">
               <ProgressSpinner style={{ width: "20px", height: "20px" }} strokeWidth="4" />
-              Kutatások betöltése...
+              Loading datasets...
             </div>
           ) : null}
 
           {datasetOptions.length === 0 && !datasetsQuery.isLoading ? (
             <div className="rounded border border-slate-700 bg-slate-900/60 p-1 text-sm text-slate-300">
-              Nincs elérhető kutatás. Hozz létre egy újat a {" "}
+              No datasets available. Create a new one on the {" "}
               <Link className="text-sky-400 hover:underline" to={routes.datasets}>
-                Datasetek
+                Datasets
               </Link>{" "}
-              lapon.
+              page.
             </div>
           ) : (
             <AttachmentGraphPanel datasetId={selectedDatasetId} heightClass="h-[700px]" />

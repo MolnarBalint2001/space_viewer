@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
-  // ide jöhetnek további változók
+  // place additional variables here
 }
 
 interface ImportMeta {

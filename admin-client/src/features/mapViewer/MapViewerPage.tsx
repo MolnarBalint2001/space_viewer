@@ -96,7 +96,7 @@ export const MapViewerPage = () => {
           setSearchParams(newParams, { replace: true });
         }
       } catch (error) {
-        console.error("Hiba a default fetch-ben:", error);
+        console.error("Error fetching default dataset:", error);
       }
     };
 
@@ -131,7 +131,7 @@ export const MapViewerPage = () => {
 
         setSearchParams(newParams, { replace: true });
       } catch (error) {
-        console.error("Hiba a dataset fetch-ben datasetId alapján:", error);
+        console.error("Error fetching dataset by datasetId:", error);
       }
     };
 
@@ -173,7 +173,7 @@ export const MapViewerPage = () => {
 
         if (isActive) setPolygons(featureCollection);
       } catch (error) {
-        console.error("Hiba a polygon fetch-ben:", error);
+        console.error("Error fetching polygons:", error);
         if (isActive) setPolygons(null);
       }
     };
@@ -185,7 +185,7 @@ export const MapViewerPage = () => {
   }, [tilesKey]);
 
   const style = (feature?: any) => ({
-    fillColor: feature?.properties?.label === "Teszt" ? "red" : "lightblue",
+    fillColor: feature?.properties?.label === "Test" ? "red" : "lightblue",
     weight: 4,
     opacity: 1,
     color: "lightgreen",
@@ -196,13 +196,13 @@ export const MapViewerPage = () => {
     const props = feature?.properties;
     if (props?.label) {
       layer.bindPopup(
-        `<b>${props.label}</b><br>ID: ${props.id}<br>Készítette: ${props.creatorUserName}`
+        `<b>${props.label}</b><br>ID: ${props.id}<br>Created by: ${props.creatorUserName}`
       );
       layer.bindTooltip(props.label, { permanent: false, direction: "center" });
     }
 
     layer.on("click", () => {
-      console.log("Kattintott polygon:", props?.id);
+      console.log("Clicked polygon:", props?.id);
       // TODO: open edit dialog
     });
   };
@@ -211,7 +211,7 @@ export const MapViewerPage = () => {
     <div className="flex h-full w-full flex-col relative" style={{ height: "100%" }}>
       {/* Header bar with current layer and tile URL */}
       <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/60 px-4 py-2 text-sm text-slate-200">
-        <span>{datasetName ? `Megjelenő réteg: ${datasetName}` : "Alapréteg"}</span>
+        <span>{datasetName ? `Displayed layer: ${datasetName}` : "Base layer"}</span>
         <code className="truncate text-xs text-slate-400">{tileUrl}</code>
       </div>
 

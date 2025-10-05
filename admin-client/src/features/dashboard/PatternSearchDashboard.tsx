@@ -17,7 +17,7 @@ const formatDateTime = (value: string): string => {
   if (Number.isNaN(date.getTime())) {
     return value;
   }
-  return new Intl.DateTimeFormat("hu-HU", {
+  return new Intl.DateTimeFormat("en-US", {
     dateStyle: "short",
     timeStyle: "medium",
   }).format(date);
@@ -58,7 +58,7 @@ const ResultCard = ({
           <img src={previewHref} alt={`${result.datasetFileName} preview`} className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-xs text-slate-500">
-            Nincs előnézet elérhető
+            No preview available
           </div>
         )}
         <div className="absolute left-3 top-3 rounded bg-emerald-600/80 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-50">
@@ -69,7 +69,7 @@ const ResultCard = ({
         <div>
           <div className="text-base font-semibold text-white">{result.datasetFileName ?? result.datasetFileId}</div>
           <div className="mt-1 text-xs text-slate-400">
-            Fájl azonosító: <span className="font-mono">{result.datasetFileId}</span>
+            File ID: <span className="font-mono">{result.datasetFileId}</span>
           </div>
           <div className="mt-1 text-xs text-slate-400">
             Asset: <span className="uppercase">{result.assetKind}</span>
@@ -94,7 +94,7 @@ const ResultCard = ({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Előnézet megnyitása
+              Open preview
             </a>
           ) : null}
           {starsHref ? (
@@ -104,11 +104,11 @@ const ResultCard = ({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Csillagtérkép
+              Star map
             </a>
           ) : null}
           <Link to={mapHref}>
-            <Button label="Megnyitás térképen" icon="pi pi-map" size="small" />
+            <Button label="Open on map" icon="pi pi-map" size="small" />
           </Link>
         </div>
       </div>
@@ -159,49 +159,49 @@ const DatasetGroupDetail = ({ group, index }: { group: DatasetGroup; index: numb
     <section className="space-y-6 rounded-lg border border-slate-800 bg-slate-900/40 p-6 shadow-sm">
       <header className="space-y-2">
         <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-500">
-          <span>Dataset csoport #{index + 1}</span>
+          <span>Dataset group #{index + 1}</span>
           <span className="font-mono text-slate-400">{group.datasetId}</span>
         </div>
         <h2 className="text-2xl font-semibold text-white">{group.datasetName}</h2>
         <p className="text-xs text-slate-400">
-          Futások: {group.runs.length} · Utolsó futás: {formatDateTime(latestRun.createdAt)}
+          Runs: {group.runs.length} · Last run: {formatDateTime(latestRun.createdAt)}
         </p>
         <Link to={buildRunMapUrl(latestRun)} className="text-xs text-sky-400 hover:underline">
-          Megnyitás a térképen
+          Open in map
         </Link>
       </header>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded border border-slate-700 bg-slate-900/50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">Összesített találat</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Total matches</p>
           <p className="mt-2 text-2xl font-semibold text-emerald-400">
             {totalSuccess} / {totalFiles}
           </p>
-          <p className="text-xs text-slate-500">Sikeres fájlok a datasetben</p>
+          <p className="text-xs text-slate-500">Successful files in dataset</p>
         </div>
         <div className="rounded border border-slate-700 bg-slate-900/50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">Átlagos futási idő</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-100">{Math.round(avgDurationMs)} ms</p>
-          <p className="text-xs text-slate-500">{runsSorted.length} run átlaga</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Average runtime</p>
+          <p className="mt-2 text-2xl font-semibold text-orange-700">{Math.round(avgDurationMs)} ms</p>
+          <p className="text-xs text-slate-500">Average across {runsSorted.length} runs</p>
         </div>
         <div className="rounded border border-slate-700 bg-slate-900/50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">Legutóbbi beállítás</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Most recent settings</p>
           <p className="mt-2 text-sm text-slate-300">
-            Score threshold: <span className="font-semibold text-slate-100">{formatNumber(latestRun.scoreThreshold)}</span>
+            Score threshold: <span className="font-semibold text-cyan-500">{formatNumber(latestRun.scoreThreshold)}</span>
           </p>
-          <p className="text-xs text-slate-500">Verifikáció tolerancia: {formatNumber(latestRun.verifyTolPx, 2)} px</p>
+          <p className="text-xs text-slate-500">Verification tolerance: {formatNumber(latestRun.verifyTolPx, 2)} px</p>
         </div>
         <div className="rounded border border-slate-700 bg-slate-900/50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">Futások száma</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Number of runs</p>
           <p className="mt-2 text-2xl font-semibold text-slate-100">{runsSorted.length}</p>
-          <p className="text-xs text-slate-500">Legutóbbi run: {formatDateTime(latestRun.createdAt)}</p>
+          <p className="text-xs text-slate-500">Latest run: {formatDateTime(latestRun.createdAt)}</p>
         </div>
       </section>
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">Talált minták</h3>
-          <span className="text-xs text-slate-400">{resultsSorted.length} sikeres találat összesen</span>
+          <h3 className="text-lg font-semibold text-white">Detected patterns</h3>
+          <span className="text-xs text-slate-400">{resultsSorted.length} successful matches total</span>
         </div>
         {resultsSorted.length ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -222,7 +222,7 @@ const DatasetGroupDetail = ({ group, index }: { group: DatasetGroup; index: numb
           </div>
         ) : (
           <div className="rounded border border-slate-700 bg-slate-900/60 p-6 text-sm text-slate-300">
-            Ehhez a datasethez nincs sikeres találat.
+            This dataset has no successful matches.
           </div>
         )}
       </section>
@@ -249,7 +249,7 @@ const fetchPersistedRuns = async (token: string | null): Promise<PatternSearchRu
     );
     return response.data.items ?? [];
   } catch (error) {
-    console.error("Nem sikerült lekérni a mentett futásokat", error);
+    console.error("Failed to fetch saved runs", error);
     return [];
   }
 };
@@ -303,12 +303,12 @@ export const PatternSearchDashboard = () => {
   if (!primaryGroups.length) {
     return (
       <div className="mx-auto space-y-6 p-8 text-slate-200">
-        <h1 className="text-2xl font-semibold text-white">Mintakeresés összefoglaló</h1>
+        <h1 className="text-2xl font-semibold text-white">Pattern search summary</h1>
         <p className="text-sm text-slate-400">
-          Nincs elérhető futási eredmény. Futtass egy mintakeresést a Map Viewer oldalon, majd térj vissza ide a részletekhez.
+          No run results available. Start a pattern search from the Map Viewer page, then return here for details.
         </p>
         <Link to={routes.mapViewer}>
-          <Button label="Ugrás a Map Viewerre" icon="pi pi-arrow-right" />
+          <Button label="Go to Map Viewer" icon="pi pi-arrow-right" />
         </Link>
       </div>
     );
@@ -317,9 +317,9 @@ export const PatternSearchDashboard = () => {
   return (
     <div className="mx-auto space-y-8 p-6 text-slate-200">
       <header className="space-y-2">
-        <h1 className="text-3xl font-bold text-white">Mintakeresések összefoglaló</h1>
+        <h1 className="text-3xl font-bold text-white">Pattern searches overview</h1>
         <p className="text-sm text-slate-400">
-          Legutóbbi {primaryGroups.length} dataset részletesen.
+          Latest {primaryGroups.length} datasets in detail.
         </p>
       </header>
 
@@ -331,7 +331,7 @@ export const PatternSearchDashboard = () => {
 
       {secondaryGroups.length ? (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold text-white">További kutatások</h2>
+          <h2 className="text-lg font-semibold text-white">Additional datasets</h2>
           <div className="grid gap-3 md:grid-cols-2">
             {secondaryGroups.map((group) => {
               const latestRun = group.runs[0];
@@ -342,15 +342,15 @@ export const PatternSearchDashboard = () => {
                     <span className="font-mono text-slate-500">{latestRun.runId.slice(0, 8)}…</span>
                   </div>
                   <div className="mt-2 text-base font-semibold text-white">{group.datasetName}</div>
-                  <div className="mt-1 text-xs text-slate-400">Futások: {group.runs.length}</div>
+                  <div className="mt-1 text-xs text-slate-400">Runs: {group.runs.length}</div>
                   <div className="mt-1 text-xs text-emerald-400">
-                    Legutóbbi találat: {latestRun.successCount} / {latestRun.totalFiles}
+                    Latest result: {latestRun.successCount} / {latestRun.totalFiles}
                   </div>
                   <Link
                     to={buildRunMapUrl(latestRun)}
                     className="mt-3 inline-block text-xs text-sky-400 hover:underline"
                   >
-                    Megtekintés a térképen
+                    View on map
                   </Link>
                 </div>
               );

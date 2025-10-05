@@ -26,15 +26,15 @@ export const MapSearchResultOverlay = ({ activeDatasetFileId }: MapSearchResultO
 
   return (
     <div className="absolute left-16 top-18 z-[900] max-w-sm">
-      <Card title="Mintakeresés találat" className="bg-slate-900/80 border border-slate-700 text-slate-100">
+      <Card title="Pattern search result" className="bg-slate-900/80 border border-slate-700 text-slate-100">
         <div className="space-y-3 text-sm">
           <div>
-            <div className="font-semibold">Fájl</div>
+            <div className="font-semibold">File</div>
             <div className="text-slate-300 break-all">{result.datasetFileName ?? result.datasetFileId}</div>
           </div>
           <div className="flex items-center gap-4 text-xs text-slate-300">
             <span>Score: <span className="font-semibold text-emerald-400">{result.score.toFixed(3)}</span></span>
-            <span>Forrás: {result.assetKind.toUpperCase()}</span>
+            <span>Source: {result.assetKind.toUpperCase()}</span>
           </div>
           {result.message ? (
             <div className="text-xs text-amber-400">{result.message}</div>
@@ -47,7 +47,7 @@ export const MapSearchResultOverlay = ({ activeDatasetFileId }: MapSearchResultO
                 className="w-full rounded border border-slate-700"
               />
               <a href={previewUrl} target="_blank" rel="noopener noreferrer">
-                <Button icon="pi pi-external-link" label="Előnézet megnyitása" size="small" />
+                <Button icon="pi pi-external-link" label="Open preview" size="small" />
               </a>
             </div>
           ) : null}

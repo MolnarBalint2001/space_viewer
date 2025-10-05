@@ -24,6 +24,7 @@ export const LoginPage: React.FC = () => {
         initialValues: {
             email: "",
             password: "",
+            rememberMe: false,
         },
         validationSchema: LoginValidationScheme,
         onSubmit: async (values) => {
@@ -36,8 +37,8 @@ export const LoginPage: React.FC = () => {
                 navigate(routes.dashboard)
             } catch {
                 notifyError(
-                    "Rossz email cím vagy jelszót adtál meg",
-                    "Hibás belépési adatok"
+                    "Incorrect email address or password.",
+                    "Sign-in failed"
                 );
             }
         },
@@ -55,13 +56,13 @@ export const LoginPage: React.FC = () => {
             }}
         >
             <Card
-                title="Tető B2C ADMIN"
+                title="NASA Webviewer Admin"
                 pt={{ title: { className: "text-center" } }}
                 className="shadow-2 border-round-xl w-full"
                 style={{ maxWidth: 640 }}
             >
                 <form onSubmit={formik.handleSubmit} className="p-fluid">
-                    {/* E-mail */}
+                    {/* Email */}
                     <div className="field mb-3">
                         <label
                             htmlFor="email"
@@ -69,7 +70,7 @@ export const LoginPage: React.FC = () => {
                                 "p-error": isInvalid("email"),
                             })}
                         >
-                            E-mail
+                            Email
                         </label>
                         <InputText
                             id="email"
@@ -81,7 +82,7 @@ export const LoginPage: React.FC = () => {
                             className={classNames({
                                 "p-invalid": isInvalid("email"),
                             })}
-                            placeholder="pelda@domain.hu"
+                            placeholder="example@domain.com"
                             autoComplete="username"
                         />
                         {isInvalid("email") && (
@@ -91,7 +92,7 @@ export const LoginPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Jelszó */}
+                    {/* Password */}
                     <div className="field mb-3">
                         <label
                             htmlFor="password"
@@ -99,7 +100,7 @@ export const LoginPage: React.FC = () => {
                                 "p-error": isInvalid("password"),
                             })}
                         >
-                            Jelszó
+                            Password
                         </label>
                         <Password
                             id="password"
@@ -127,7 +128,7 @@ export const LoginPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Emlékezz rám + Elfelejtett jelszó */}
+                    {/* Remember me + Forgotten password */}
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <Checkbox
@@ -141,13 +142,13 @@ export const LoginPage: React.FC = () => {
                                 }
                                 checked={formik.values.rememberMe}
                             />
-                            <label htmlFor="rememberMe">Emlékezz rám</label>
+                            <label htmlFor="rememberMe">Remember me</label>
                         </div>
                         <a
                             href="#"
                             className="text-primary-600 hover:underline"
                         >
-                            Elfelejtett jelszó?
+                            Forgot password?
                         </a>
                     </div>
 
@@ -155,8 +156,8 @@ export const LoginPage: React.FC = () => {
                         type="submit"
                         label={
                             formik.isSubmitting
-                                ? "Bejelentkezés…"
-                                : "Bejelentkezés"
+                                ? "Signing in..."
+                                : "Sign in"
                         }
                         icon={
                             formik.isSubmitting

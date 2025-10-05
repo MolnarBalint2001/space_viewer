@@ -80,18 +80,18 @@ export const RealtimeProvider = ({ children }: PropsWithChildren): ReactElement 
 
         if (status === DatasetStatus.Ready) {
             notifySuccess(
-                "Feldolgozás kész",
-                `A(z) ${name} kutatás csempéi elkészültek.`
+                "Processing complete",
+                `Tiles for the ${name} dataset are ready.`
             );
         } else if (status === DatasetStatus.Failed) {
             notifyError(
-                "Feldolgozás sikertelen",
-                message ?? `Hiba történt a(z) ${name} feldolgozása közben.`
+                "Processing failed",
+                message ?? `An error occurred while processing ${name}.`
             );
         } else if (status === DatasetStatus.Processing) {
             notifyInfo(
-                "Feldolgozás elindult",
-                `A(z) ${name} kutatás csempéinek generálása folyamatban.`
+                "Processing started",
+                `Generating tiles for the ${name} dataset.`
             );
         }
     };
@@ -106,20 +106,20 @@ export const RealtimeProvider = ({ children }: PropsWithChildren): ReactElement 
         const attachmentLabel = filename ?? attachmentId;
         if (status === "processing") {
             notifyInfo(
-                "Címkézés folyamatban",
-                `A(z) ${attachmentLabel} melléklet címkézése elindult.`
+                "Tagging in progress",
+                `Started tagging attachment ${attachmentLabel}.`
             );
         } else if (status === "completed") {
             notifySuccess(
-                "Címkézés kész",
+                "Tagging completed",
                 tags?.length
                     ? `${attachmentLabel}: ${tags.slice(0, 5).join(', ')}`
-                    : `A(z) ${attachmentLabel} melléklethez elkészültek a címkék.`
+                    : `Tags are ready for attachment ${attachmentLabel}.`
             );
         } else if (status === "failed") {
             notifyError(
-                "Címkézés sikertelen",
-                error ?? `Nem sikerült feldolgozni a(z) ${attachmentLabel} mellékletet.`
+                "Tagging failed",
+                error ?? `Failed to process attachment ${attachmentLabel}.`
             );
         }
     };

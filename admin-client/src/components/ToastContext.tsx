@@ -27,7 +27,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         toastRef.current?.show(options);
     };
 
-    const notifySuccess = (message: string, summary = "Siker") => {
+    const notifySuccess = (message: string, summary = "Success") => {
         notify({
             severity: "success",
             summary,
@@ -36,7 +36,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
-    const notifyError = (message: string, summary = "Hiba") => {
+    const notifyError = (message: string, summary = "Error") => {
         notify({
             severity: "error",
             summary,
@@ -45,7 +45,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
-    const notifyInfo = (message: string, summary = "Feldolgozás") => {
+    const notifyInfo = (message: string, summary = "Processing") => {
         notify({
             severity: "info",
             summary,
@@ -58,7 +58,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         <ToastContext.Provider
             value={{ notify, notifySuccess, notifyError, notifyInfo }}
         >
-            {/* Globális toast komponens */}
+            {/* Global toast component */}
             <Toast ref={toastRef} />
             {children}
         </ToastContext.Provider>

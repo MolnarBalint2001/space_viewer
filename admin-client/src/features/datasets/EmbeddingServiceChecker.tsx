@@ -47,8 +47,8 @@ export const EmbeddingServiceChecker = () => {
         {isLoading ? <ProgressSpinner className="w-[32px] h-[32px]"/> :
         <Badge
             id="embedding-service-health-marker"
-            value={isAlive ? "Available" : "Not available"}
-            severity={isAlive ? "success" : "danger"}
+            value={!isAlive ? "Available" : "Not available"}
+            severity={!isAlive ? "success" : "danger"}
         ></Badge>}
     </div>
 }
