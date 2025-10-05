@@ -1,28 +1,40 @@
-from typing import List, Union
+from typing import List
 
 import numpy as np
-from fastapi import Body, FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, validator
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from pydantic import BaseModel, ValidationError, validator
 from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 VECTOR_DIMENSION = 384
 
-app = FastAPI(title="Embedding Microservice", version="1.0.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:4000", "http://127.0.0.1:4000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = Flask(__name__)
+CORS(
+    app,
+    origins=["http://localhost:4000", "http://127.0.0.1:4000"],
+    supports_credentials=True,
 )
 
 
 class TextItem(BaseModel):
     name: str | None = None
     description: str | None = None
+
+    @validator("name", "description", pre=True)
+    def _normalize_field(cls, value):
+        if value is None:
+            return None
+        if isinstance(value, str):
+            return value
+        if isinstance(value, (int, float, bool)):
+            return str(value)
+        if isinstance(value, bytes):
+            try:
+                return value.decode("utf-8")
+            except UnicodeDecodeError:
+                return value.decode("utf-8", errors="ignore")
+        return str(value)
 
     @property
     def combined_text(self) -> str:
@@ -33,17 +45,19 @@ class TextItem(BaseModel):
 
 
 class EmbedRequest(BaseModel):
-    items: Union[TextItem, List[TextItem]]
+    items: List[TextItem]
 
-    @validator("items")
-    def validate_items(cls, value: Union[TextItem, List[TextItem]]) -> List[TextItem]:
-        if isinstance(value, list):
-            if not value:
-                raise ValueError("items must not be an empty list")
-            return value
-        if isinstance(value, TextItem):
-            return [value]
-        raise ValueError("Invalid items payload")
+    @validator("items", pre=True)
+    def _coerce_items(cls, value):
+        if value is None:
+            raise ValueError("items payload is required")
+        if isinstance(value, dict) or isinstance(value, TextItem):
+            value = [value]
+        elif not isinstance(value, list):
+            raise ValueError("items must be an object or a list of objects")
+        if not value:
+            raise ValueError("items must not be an empty list")
+        return value
 
 
 class EmbeddingResult(BaseModel):
@@ -59,25 +73,44 @@ class EmbedResponse(BaseModel):
 model = SentenceTransformer(MODEL_NAME)
 
 
-@app.get("/ping")
-def ping() -> dict[str, str]:
+@app.route("/ping", methods=["GET"])
+def ping():
     """Simple health-check endpoint."""
-    return {"status": "ok", "model": MODEL_NAME}
+    return jsonify({"status": "ok", "model": MODEL_NAME})
 
 
-@app.post("/embed", response_model=EmbedResponse)
-def embed_text(payload: EmbedRequest = Body(...)) -> EmbedResponse:
-    items: List[TextItem] = payload.items  # validated to list by model
-    print("Hossz: " + len(items))
+@app.route("/embed", methods=["POST"])
+def embed_text():
+    raw_payload = request.get_json(silent=True)
+    if raw_payload is None:
+        return jsonify({"detail": "Invalid or missing JSON payload"}), 400
+
+    try:
+        payload = EmbedRequest.parse_obj(raw_payload)
+    except ValidationError as exc:
+        return jsonify({"detail": exc.errors()}), 400
+
+    items: List[TextItem] = payload.items
     texts: List[str] = []
+
+    print("PAYLOAD:", payload)
+    print("ITEMS:", items)
+
     for item in items:
         combined = item.combined_text
-        print("combined" + combined)
         if not combined:
-            raise HTTPException(status_code=400, detail="Each item must contain at least one non-empty field")
+            return (
+                jsonify({"detail": "Each item must contain at least one non-empty field"}),
+                400,
+            )
         texts.append(combined)
 
-    embeddings = model.encode(texts, convert_to_numpy=True, show_progress_bar=False, normalize_embeddings=False)
+    embeddings = model.encode(
+        texts,
+        convert_to_numpy=True,
+        show_progress_bar=False,
+        normalize_embeddings=False,
+    )
     if embeddings.ndim == 1:
         embeddings = np.expand_dims(embeddings, axis=0)
 
@@ -94,9 +127,14 @@ def embed_text(payload: EmbedRequest = Body(...)) -> EmbedResponse:
             )
         )
 
-    return EmbedResponse(results=results)
+    response = EmbedResponse(results=results)
+    return jsonify(response.dict())
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"message": "Embedding service is running", "model": MODEL_NAME}
+@app.route("/", methods=["GET"])
+def root():
+    return jsonify({"message": "Embedding service is running", "model": MODEL_NAME})
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
