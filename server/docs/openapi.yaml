@@ -14,6 +14,7 @@ tags:
   - name: Health
   - name: AdminAuth
   - name: Datasets
+  - name: Graph
   - name: PublicDatasets
 
 paths:
@@ -196,8 +197,81 @@ paths:
         "201":
           description: Frissített adatgyűjtés mellékletekkel
           content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DatasetDetail" }
+
+  /admin/datasets/{datasetId}/graph:
+    parameters:
+      - in: path
+        name: datasetId
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Graph]
+      summary: Kutatáshoz tartozó dokumentum/tag gráf
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: depth
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 3
+      responses:
+        "200":
+          description: Gráf a kiválasztott kutatáshoz
+          content:
             application/json:
-              schema: { $ref: "#/components/schemas/DatasetDetail" }
+              schema: { $ref: "#/components/schemas/GraphResponse" }
+        "404":
+          description: Kutatás nem található
+
+  /admin/graph:
+    get:
+      tags: [Graph]
+      summary: Gráf lekérése bármely csomópontból kiindulva
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [dataset, document, tag]
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: string
+          description: A csomópont típushoz tartozó azonosító (datasetId, attachmentId vagy tag név)
+        - in: query
+          name: nodeKey
+          required: false
+          schema:
+            type: string
+          description: Közvetlen Neo4j nodeKey (pl. dataset:123)
+        - in: query
+          name: depth
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 3
+      responses:
+        "200":
+          description: Gráf adatok
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GraphResponse" }
+        "400":
+          description: Hibás kérés
+        "404":
+          description: A csomópont nem érhető el
 
   /admin/datasets/{datasetId}/share:
     parameters:
@@ -684,6 +758,44 @@ components:
           nullable: true
         visibility:
           $ref: "#/components/schemas/DatasetVisibility"
+
+    GraphNode:
+      type: object
+      properties:
+        key: { type: string }
+        type:
+          type: string
+          enum: [dataset, document, tag]
+        label: { type: string }
+        properties:
+          type: object
+          additionalProperties: true
+
+    GraphEdge:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string }
+        from: { type: string }
+        to: { type: string }
+        properties:
+          type: object
+          additionalProperties: true
+
+    GraphResponse:
+      type: object
+      properties:
+        root:
+          type: string
+          description: Kiinduló nodeKey a gráfhoz
+        depth:
+          type: integer
+        nodes:
+          type: array
+          items: { $ref: "#/components/schemas/GraphNode" }
+        edges:
+          type: array
+          items: { $ref: "#/components/schemas/GraphEdge" }
 
     ShareTokenResponse:
       type: object

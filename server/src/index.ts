@@ -10,6 +10,7 @@ import { connectRedis, redis } from "./services/redis";
 import { logger } from "./utils/logger";
 import { initMinio } from "./services/minio.service";
 import { closeWebsocket, initWebsocket } from "./services/websocket.service";
+import { closeNeo4j, initNeo4j } from "./services/neo4j.service";
 import { ensureCollection } from "./clients/qdarant.client";
 // Avoid logging env secrets in production
 
@@ -22,6 +23,9 @@ async function main() {
 
     await connectRedis();
     logger.info("Redis connected")
+
+    await initNeo4j();
+    logger.info("Neo4j connected")
 
     await initRabbit()
     logger.info("RabbitMq connected")
@@ -50,6 +54,7 @@ async function main() {
           logger.info('DB connection closed');
         } finally {
           closeWebsocket();
+          await closeNeo4j().catch(() => undefined);
           process.exit(0);
         }
       });

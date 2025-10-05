@@ -1,12 +1,16 @@
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
+import { env } from '../config/env';
+import { AdminUser } from '../domain/entities/AdminUser';
+import { Dataset } from '../domain/entities/Dataset';
+import { DatasetFile } from '../domain/entities/DatasetFile';
+import { DatasetAttachment } from '../domain/entities/DatasetAttachment';
+import { Polygon } from '../domain/entities/Polygon';
+import { PatternSearchRun } from '../domain/entities/PatternSearchRun';
+import { PatternSearchResult } from '../domain/entities/PatternSearchResult';
 import "reflect-metadata";
-import { DataSource } from "typeorm";
-import { PostgresDriver } from "typeorm/driver/postgres/PostgresDriver";
-import { env } from "../config/env";
-import { AdminUser } from "../domain/entities/AdminUser";
-import { Dataset } from "../domain/entities/Dataset";
-import { DatasetFile } from "../domain/entities/DatasetFile";
-import { DatasetAttachment } from "../domain/entities/DatasetAttachment";
-import { Polygon } from "../domain/entities/Polygon";
+
+
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -17,13 +21,15 @@ export const AppDataSource = new DataSource({
   database: env.DB_NAME,
   ssl: env.DB_SSL,
   synchronize: false,
-  logging: env.NODE_ENV !== "production",
+  logging: false, //env.NODE_ENV !== 'production',
   entities: [
     AdminUser,
     Dataset,
     DatasetFile,
     DatasetAttachment,
     Polygon,
+    PatternSearchRun,
+    PatternSearchResult,
   ],
   migrations: [
     "src/db/migrations/*.ts",
@@ -31,7 +37,7 @@ export const AppDataSource = new DataSource({
 });
 
 if ((AppDataSource.driver as any)?.options?.type === "postgres") {
-  const driver = AppDataSource.driver as PostgresDriver;
+  const driver = AppDataSource.driver as any;
   const typeName = "vector";
   const arrays = [
     "supportedDataTypes",

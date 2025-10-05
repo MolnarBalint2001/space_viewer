@@ -18,7 +18,20 @@ export interface DatasetStatusMessage {
   message?: string;
 }
 
-export type OutgoingRealtimeMessage = DatasetStatusMessage | Record<string, any>;
+export interface AttachmentTaggingMessage {
+  type: "attachment:tagging";
+  datasetId: string;
+  attachmentId: string;
+  status: "processing" | "completed" | "failed";
+  filename?: string;
+  tags?: string[];
+  error?: string;
+}
+
+export type OutgoingRealtimeMessage =
+  | DatasetStatusMessage
+  | AttachmentTaggingMessage
+  | Record<string, any>;
 
 const userSockets = new Map<string, Set<WebSocket>>();
 let wss: WebSocketServer | null = null;
@@ -129,6 +142,13 @@ export function broadcast(message: OutgoingRealtimeMessage) {
 }
 
 export function sendDatasetStatusUpdate(userId: string, message: DatasetStatusMessage) {
+  broadcastToUser(userId, message);
+}
+
+export function sendAttachmentTaggingUpdate(
+  userId: string,
+  message: AttachmentTaggingMessage,
+) {
   broadcastToUser(userId, message);
 }
 

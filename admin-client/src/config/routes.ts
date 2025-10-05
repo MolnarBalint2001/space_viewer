@@ -15,5 +15,6 @@ export const routes = {
     coverage: "/coverage",
     mapViewer: "/map-viewer",
     datasets: "/datasets",
+    graph: "/graph",
 
 }

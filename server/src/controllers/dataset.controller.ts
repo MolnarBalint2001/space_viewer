@@ -12,7 +12,6 @@ import {
   DatasetFile,
   DatasetFileStatus,
 } from "../domain/entities/DatasetFile";
-import { DatasetAttachment } from "../domain/entities/DatasetAttachment";
 import { AppDataSource } from "../db/dataSource";
 import {
   DatasetCreateInput,
@@ -29,17 +28,26 @@ import {
   getDatasetForShareToken,
   getPublicDataset,
 } from "../services/dataset.service";
-import { putObject, presignedGetUrl } from "../services/minio.service";
+import {
+  putObject,
+  presignedGetUrl,
+  getObjectStream,
+} from "../services/minio.service";
 import { publishDomainEvent } from "../services/eventBus.service";
+import {
+  DatasetAttachmentUploadedEvent,
+  DatasetFileUploadedEvent,
+} from "../@types/event.type";
 import { embedDataset } from "../services/embeddingGateway.service";
-import { DatasetFileUploadedEvent } from "../@types/event.type";
 import { BadRequest, NotFound } from "../utils/error";
 import { logger } from "../utils/logger";
+import {
+  createDatasetAttachment,
+  findDatasetAttachmentById,
+} from "../repositories/datasetAttachment.repository";
 
 const datasetRepo = () => AppDataSource.getRepository(Dataset);
 const datasetFileRepo = () => AppDataSource.getRepository(DatasetFile);
-const datasetAttachmentRepo = () =>
-  AppDataSource.getRepository(DatasetAttachment);
 
 function toDatasetDetailResponse(payload: DatasetDetailDto) {
   return payload;
@@ -215,14 +223,24 @@ export async function uploadAttachments(req: Request, res: Response) {
       const objectKey = `datasets/${dataset.id}/attachments/${randomUUID()}${ext}`;
       await putObject(objectKey, createReadStream(file.path), file.mimetype);
 
-      const attachment = datasetAttachmentRepo().create({
+      const attachment = await createDatasetAttachment({
         datasetId: dataset.id,
         originalFilename: file.originalname,
         mimeType: file.mimetype || "application/pdf",
         objectKey,
         size: file.size ? file.size.toString() : null,
       });
-      await datasetAttachmentRepo().save(attachment);
+
+      await publishDomainEvent<DatasetAttachmentUploadedEvent>({
+        name: "dataset.attachment.uploaded",
+        payload: {
+          datasetId: dataset.id,
+          attachmentId: attachment.id,
+          ownerId: dataset.ownerId,
+          objectKey: attachment.objectKey,
+          originalFilename: attachment.originalFilename,
+        },
+      });
     }
   } finally {
     await Promise.all(
@@ -289,6 +307,101 @@ export async function getFileDownloadUrl(req: Request, res: Response) {
   return res.json({ url });
 }
 
+async function streamObjectToResponse(
+  res: Response,
+  objectKey: string,
+  filename: string | null,
+  contentType?: string | null,
+  size?: string | null,
+) {
+  const stream = await getObjectStream(objectKey);
+  if (contentType) {
+    res.setHeader("Content-Type", contentType);
+  }
+  if (size) {
+    const parsed = Number(size);
+    if (!Number.isNaN(parsed)) {
+      res.setHeader("Content-Length", String(parsed));
+    }
+  }
+  if (filename) {
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    );
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    stream.on("error", (err) => {
+      res.destroy(err as Error);
+      reject(err);
+    });
+    res.on("error", (err) => {
+      stream.destroy(err as Error);
+      reject(err);
+    });
+    res.on("close", () => {
+      stream.destroy();
+    });
+    stream.pipe(res);
+    stream.on("end", () => resolve());
+  });
+}
+
+export async function streamFileContent(req: Request, res: Response) {
+  const user = req.user as any;
+  const { datasetId, fileId } = req.params;
+
+  const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
+  if (!dataset || dataset.ownerId !== user.id) {
+    throw new NotFound("A kutatás nem található");
+  }
+
+  const file = await datasetFileRepo().findOne({
+    where: { id: fileId, datasetId },
+  });
+  if (!file) throw new NotFound("A fájl nem található");
+
+  if (!file.objectKey) {
+    throw new NotFound("A fájlnak nincs tárolt objektum kulcsa");
+  }
+
+  await streamObjectToResponse(
+    res,
+    file.objectKey,
+    file.originalFilename ?? null,
+    file.mimeType ?? null,
+    file.size ?? null,
+  );
+}
+
+export async function streamFileMbtiles(req: Request, res: Response) {
+
+  console.log(req.headers)
+  const user = req.user as any;
+  const { datasetId, fileId } = req.params;
+
+  const dataset = await datasetRepo().findOne({ where: { id: datasetId } });
+  if (!dataset || dataset.ownerId !== user.id) {
+    throw new NotFound("A kutatás nem található");
+  }
+
+  const file = await datasetFileRepo().findOne({
+    where: { id: fileId, datasetId },
+  });
+  if (!file || !file.mbtilesKey) {
+    throw new NotFound("A feldolgozott MBTiles nem érhető el");
+  }
+
+  await streamObjectToResponse(
+    res,
+    file.mbtilesKey,
+    `${file.id}.mbtiles`,
+    "application/octet-stream",
+    file.mbtilesSize ?? null,
+  );
+}
+
 export async function getFileMbtilesDownloadUrl(req: Request, res: Response) {
   const user = req.user as any;
   const { datasetId, fileId } = req.params;
@@ -318,9 +431,11 @@ export async function getAttachmentDownloadUrl(req: Request, res: Response) {
     throw new NotFound("A kutatĂˇs nem talĂˇlhatĂł");
   }
 
-  const attachment = await datasetAttachmentRepo().findOne({
-    where: { id: attachmentId, datasetId },
-  });
+  const attachment = await findDatasetAttachmentById(attachmentId);
+  if (!attachment || attachment.datasetId !== datasetId) {
+    throw new NotFound("A melléklet nem található");
+  }
+
   if (!attachment) throw new NotFound("A mellĂ©klet nem talĂˇlhatĂł");
 
   const url = await presignedGetUrl(attachment.objectKey);
@@ -431,6 +546,47 @@ export async function getPublicMbtilesUrl(req: Request, res: Response) {
   }
   const url = await presignedGetUrl(file.mbtilesKey);
   return res.json({ url });
+}
+
+export async function streamPublicFileContent(req: Request, res: Response) {
+  const { datasetId, fileId } = req.params;
+  const detail = await getPublicDataset(datasetId, {
+    includeDownloads: false,
+    includeObjectKeys: true,
+  });
+  const file = detail.files.find((f) => f.id === fileId);
+  if (!file || !file.objectKey) {
+    throw new NotFound("A fájl nem található a nyilvános kutatásban");
+  }
+
+  await streamObjectToResponse(
+    res,
+    file.objectKey,
+    file.originalFilename ?? null,
+    file.mimeType ?? null,
+    file.size ?? null as any,
+  );
+}
+
+export async function streamPublicMbtiles(req: Request, res: Response) {
+  const { datasetId, fileId } = req.params;
+  const detail = await getPublicDataset(datasetId, {
+    includeDownloads: false,
+    includeObjectKeys: true,
+  });
+
+  const file = detail.files.find((f) => f.id === fileId);
+  if (!file || !file.mbtilesKey) {
+    throw new NotFound("Ez a fájl még nem készült el MBTiles formátumban");
+  }
+
+  await streamObjectToResponse(
+    res,
+    file.mbtilesKey,
+    `${file.id}.mbtiles`,
+    "application/octet-stream",
+    file.mbtilesSize ?? null as any,
+  );
 }
 
 export async function getPublicAttachmentDownloadUrl(req: Request, res: Response) {

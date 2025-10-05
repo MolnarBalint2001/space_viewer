@@ -55,6 +55,17 @@ const EnvSchema = z.object({
   RABBITMQ_URL: z.string().default('amqp://rabbit:rabbit@localhost:5672'),
   RABBITMQ_EXCHANGE: z.string().default('domain-events'),
 
+  // OpenAI tagging
+  OPENAI_API_KEY: z.string().min(10, 'OpenAI API kulcs szükséges'),
+  OPENAI_MODEL: z.string().default('gpt-4.1-mini'),
+  ATTACHMENT_TAG_LIMIT: z.coerce.number().min(1).max(25).default(10),
+
+  // Neo4j
+  NEO4J_URI: z.string().default('neo4j://localhost:7687'),
+  NEO4J_USER: z.string().default('neo4j'),
+  NEO4J_PASSWORD: z.string().default('asdQWE123.'),
+  NEO4J_DATABASE: z.string().default('neo4j'),
+
   
 });
 

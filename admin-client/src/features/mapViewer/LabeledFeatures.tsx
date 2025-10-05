@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { VirtualScroller, VirtualScrollerLazyEvent } from "primereact/virtualscroller";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
+import { useMapSidebar } from "../../components/MapSidebarContext";
 
 const PAGE_SIZE = 20;
 
@@ -92,6 +93,7 @@ const MiniPolygon = ({ geom }: { geom?: PolygonGeometry }) => {
 export const LabeledFeatures = ({ isActive }: LabeledFeaturesProps) => {
   const [searchParams] = useSearchParams();
   const tilesKey = searchParams.get("tilesKey");
+  const { labeledFeaturesRefreshToken } = useMapSidebar();
 
   const activeKeyRef = useRef<string | null>(tilesKey);
 
@@ -102,6 +104,7 @@ export const LabeledFeatures = ({ isActive }: LabeledFeaturesProps) => {
   const [initializedKey, setInitializedKey] = useState<string | null>(null);
 
   const pendingRanges = useRef(new Set<string>());
+  const refreshTokenRef = useRef<number>(labeledFeaturesRefreshToken);
 
   useEffect(() => {
     activeKeyRef.current = tilesKey;
@@ -112,7 +115,6 @@ export const LabeledFeatures = ({ isActive }: LabeledFeaturesProps) => {
     setTotalRecords(0);
     setError(null);
     pendingRanges.current.clear();
-    setInitializedKey(null);
   }, []);
 
   const fetchChunk = useCallback(
@@ -181,20 +183,26 @@ export const LabeledFeatures = ({ isActive }: LabeledFeaturesProps) => {
 
     if (!tilesKey) {
       reset();
+      setInitializedKey(null);
+      refreshTokenRef.current = labeledFeaturesRefreshToken;
       return;
     }
 
-    if (initializedKey !== tilesKey) {
-      reset();
-      const currentKey = tilesKey;
-      (async () => {
-        await fetchChunk(0, PAGE_SIZE);
-        if (activeKeyRef.current === currentKey) {
-          setInitializedKey(currentKey);
-        }
-      })();
+    const needsReload =
+      initializedKey !== tilesKey || refreshTokenRef.current !== labeledFeaturesRefreshToken;
+
+    if (!needsReload) {
+      return;
     }
-  }, [fetchChunk, initializedKey, isActive, reset, tilesKey]);
+
+    reset();
+    setInitializedKey(tilesKey);
+    refreshTokenRef.current = labeledFeaturesRefreshToken;
+
+    (async () => {
+      await fetchChunk(0, PAGE_SIZE);
+    })();
+  }, [fetchChunk, initializedKey, isActive, labeledFeaturesRefreshToken, reset, tilesKey]);
 
   useEffect(() => {
     if (!isActive || !tilesKey) {
@@ -306,4 +314,3 @@ export const LabeledFeatures = ({ isActive }: LabeledFeaturesProps) => {
     </div>
   );
 };
-

@@ -1,23 +1,12 @@
 
-import {
-    ArcElement,
-    CategoryScale,
-    Chart as ChartJS,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Tooltip,
-} from "chart.js";
-
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
-
+import { PatternSearchDashboard } from "./PatternSearchDashboard";
 
 export const DashboardPage = () => {
-
-
     return (
-        <div className="">
+        <div className="h-full w-full overflow-y-auto bg-slate-950/40">
+            <div className="py-6">
+                <PatternSearchDashboard />
+            </div>
         </div>
     );
 };

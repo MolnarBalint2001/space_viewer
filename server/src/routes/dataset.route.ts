@@ -9,6 +9,7 @@ import {
   DatasetUpdateDto,
 } from "../domain/dtos/dataset.dto";
 import * as DatasetController from "../controllers/dataset.controller";
+import * as GraphController from "../controllers/graph.controller";
 
 
 const router = Router();
@@ -33,8 +34,8 @@ const attachmentUpload = multer({
   limits: { files: 10 },
 });
 
-router.use(adminAuth());
 
+router.use(adminAuth())
 router.get(
   "/",
   validate(DatasetListQueryDto, "query"),
@@ -43,7 +44,7 @@ router.get(
 
 router.post("/", validate(DatasetCreateDto), DatasetController.create);
 
-router.get("/:datasetId", DatasetController.getOne);
+router.get("/:datasetId", adminAuth(), DatasetController.getOne);
 
 router.patch(
   "/:datasetId",
@@ -55,6 +56,21 @@ router.post(
   "/:datasetId/files",
   tifUpload.array("files", 10),
   DatasetController.uploadTifs
+);
+
+router.get(
+  "/:datasetId/files/:fileId/raw",
+  DatasetController.streamFileContent
+);
+
+router.get(
+  "/:datasetId/files/:fileId/mbtiles/raw",
+  DatasetController.streamFileMbtiles
+);
+
+router.get(
+  "/:datasetId/graph",
+  GraphController.getDatasetGraph
 );
 
 router.post(

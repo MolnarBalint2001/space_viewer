@@ -299,6 +299,12 @@ export const DatasetManagerPage = () => {
         }
         const params = new URLSearchParams();
         params.set("tilesKey", file.tilesetKey);
+        if (selectedDatasetId) {
+            params.set("datasetId", selectedDatasetId);
+        }
+        if (file.id) {
+            params.set("fileId", file.id);
+        }
         if (file.centerLat != null && file.centerLng != null) {
             params.set("lat", String(file.centerLat));
             params.set("lng", String(file.centerLng));
@@ -307,6 +313,9 @@ export const DatasetManagerPage = () => {
             params.set("name", datasetDetail.name);
         } else if (file.originalFilename) {
             params.set("name", file.originalFilename);
+        }
+        if (file.originalFilename) {
+            params.set("fileName", file.originalFilename);
         }
         navigate(`${routes.mapViewer}?${params.toString()}`);
     };
