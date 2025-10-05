@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -8,19 +9,32 @@ import type { Layer } from "leaflet";
 import { useToast } from "../../components/ToastContext";
 import { useMapSidebar } from "../../components/MapSidebarContext";
 import type { LineString } from "geojson";
+import { useSearchParams } from "react-router-dom";
 
-export const MapInitializer = () => {
+
+
+type MapInitializerProps = {
+    setPolygons:any
+}
+
+export const MapInitializer = ({setPolygons}:MapInitializerProps) => {
 
     const map = useMap();
     const {notifyError, notifySuccess} = useToast();
     const { setActiveLineString, activeLineString } = useMapSidebar();
 
+    const [searchParams] = useSearchParams();
+    const tilesKey = searchParams.get("tilesKey");
+
     const [crePopVis, setCrePopVis] = useState<boolean>(false);
-    const labelRef = useRef<HTMLInputElement>(null);
-    const [geom, setGeom] = useState<any | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const pendingLayerRef = useRef<Layer | null>(null);
     const lineLayerRef = useRef<Layer | null>(null);
+    const [geom, setGeom] = useState<any | null>(null);
+  
+    const labelRef = useRef<HTMLInputElement>(null);
+  
+   
 
     //Actions
     const handleGeometryCreate = useCallback((e: any) => {
@@ -57,17 +71,40 @@ export const MapInitializer = () => {
         const label = labelRef.current?.value;
         const data = {
             geom,
-            label
+            label,
+            tilesKey
         }
         try{
             const response = await axios.post("http://localhost:3000/api/polygon", data);
-            console.log(response);
             if (pendingLayerRef.current) {
                 (pendingLayerRef.current as any).remove();
                 pendingLayerRef.current = null;
               }
               setCrePopVis(false);
               if (labelRef.current) labelRef.current.value = '';
+
+              const response2 = await axios.get(`http://localhost:3000/api/polygon?tileKey=${tilesKey}`);
+              const dbPolygons = response2.data.polygons;  // Array: [{ id, label, geom, ... }]
+              console.log('DB polygonok:', dbPolygons);
+  
+              // Átalakítás GeoJSON FeatureCollection-re
+              const featureCollection = {
+                  type: 'FeatureCollection' as const,
+                  features: dbPolygons.map((polygon: any) => ({
+                      type: 'Feature' as const,
+                      properties: {
+                          id: polygon.id,
+                          label: polygon.label,
+                          creatorUserId: polygon.creatorUserId,
+                          creatorUserName: polygon.creatorUserName,
+                          // További properties, ha kell
+                      },
+                      geometry: polygon.geom,  // Közvetlenül a DB geom (Polygon GeoJSON)
+                  })),
+              };
+  
+              console.log('FeatureCollection:', featureCollection);
+              setPolygons(featureCollection);  // State: Teljes GeoJSON objektum
             notifySuccess("Polygon successfully created.");
         }
         catch(error){
@@ -76,24 +113,29 @@ export const MapInitializer = () => {
         finally{
             setIsSaving(false);
         }
-    }, [geom]);
+    }, [geom, tilesKey]);
+
+   
+
+    
 
     useEffect(() => {
         if (!map.pm) return;
 
         map.pm.addControls({
             position: 'topleft',
-            drawMarker: true,
+            drawMarker: false,
             drawCircleMarker: false,
             drawPolyline: true,
             drawRectangle: true,
             drawPolygon: true,
-            drawCircle: true,
-            drawText: true,
-            editMode: true,
-            dragMode: true,
-            cutPolygon: true,
+            drawCircle: false,
+            drawText: false,
+            editMode: false,
+            dragMode: false,
+            cutPolygon: false,
             removalMode: true,
+            rotateMode:false
         });
 
         map.addEventListener("pm:create", handleGeometryCreate);

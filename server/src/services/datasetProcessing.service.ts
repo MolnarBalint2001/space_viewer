@@ -256,6 +256,71 @@ export async function processDatasetFile(event: DatasetFileUploadedEvent) {
     const mbtilesKey = `datasets/${dataset.id}/tiles/${file.id}.mbtiles`;
     await putObjectFromFile(mbtilesKey, mbtilesPath, "application/x-sqlite3");
 
+
+    //Compress
+    try {
+      const previewFilename = `${file.id}-preview.jpg`;
+      const previewPath = path.join(tmpDir, previewFilename);
+
+      await runCommand(
+        "gdal_translate",
+        [
+          "-of",
+          "JPEG",
+          "-outsize",
+          "512",
+          "0",
+          "-co",
+          "QUALITY=75",
+          sourcePath,
+          previewPath,
+        ],
+        tmpDir
+      );
+
+      const previewKey = `datasets/${dataset.id}/previews/${file.id}.jpg`;
+      await putObjectFromFile(previewKey, previewPath, "image/jpeg");
+
+      const previewStats = await fs.stat(previewPath);
+      file.previewImageKey = previewKey;
+      file.previewImageMimeType = "image/jpeg";
+      file.previewImageSize = previewStats.size.toString();
+
+      try {
+        const { stdout }:any = await exec("gdalinfo", ["-json", previewPath], { cwd: tmpDir });
+        let infoRaw: string | null = null;
+        if (typeof stdout === "string") {
+          infoRaw = stdout;
+        } else if (Buffer.isBuffer(stdout)) {
+          infoRaw = stdout.toString("utf8");
+        }
+        const info = infoRaw ? JSON.parse(infoRaw) : {};
+        const size = Array.isArray(info?.size) ? info.size : null;
+        if (size && size.length >= 2) {
+          const [width, height] = size;
+          if (Number.isFinite(Number(width))) {
+            file.previewImageWidth = Number(width);
+          }
+          if (Number.isFinite(Number(height))) {
+            file.previewImageHeight = Number(height);
+          }
+        }
+      } catch (metaErr) {
+        logger.warn("Failed to extract preview metadata", {
+          err: metaErr,
+          datasetFileId: file.id,
+        });
+      }
+
+      await fs.unlink(previewPath).catch(() => undefined);
+    } catch (previewErr) {
+      logger.warn("Preview image generation failed", {
+        err: previewErr,
+        datasetFileId: file.id,
+      });
+    }
+
+
     let localTilePath = mbtilesPath;
     let configUpdated = false;
     let center: { lat: number; lng: number } | null = null;
@@ -286,7 +351,9 @@ export async function processDatasetFile(event: DatasetFileUploadedEvent) {
     file.mbtilesSize = stats.size.toString();
     file.status = DatasetFileStatus.READY;
     file.processedAt = new Date();
-    await datasetFileRepo().save(file);
+    const savedRecord = await datasetFileRepo().save(file);
+
+    
 
     const updatedDataset = await recalculateDatasetStatus(dataset.id);
 
@@ -345,3 +412,7 @@ export async function processDatasetFile(event: DatasetFileUploadedEvent) {
     await fs.rm(tmpDir, { recursive: true, force: true });
   }
 }
+
+
+
+

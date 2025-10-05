@@ -48,7 +48,7 @@ const limiter = rateLimit({
 	// store: ... , // Redis, Memcached, etc. See below.
 })
 // Egyszerű rate limit – (prod-ban inkább Redis store)
-app.use(limiter);
+//app.use(limiter);
 
 app.use('/api', routes);
 

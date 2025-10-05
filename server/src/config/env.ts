@@ -47,6 +47,7 @@ const EnvSchema = z.object({
 
   DATASET_LOCAL_TILE_DIR: z.string().default('../data/mbtiles'),
   TILESERVER_CONFIG_PATH: z.string().default('../data/mbtiles/config.json'),
+  EMBEDDING_SERVICE_URL: z.string().default('http://localhost:8000'),
   TILESERVER_COMPOSE_FILE: z.string().default('../docker-compose.yml'),
   TILESERVER_COMPOSE_SERVICE: z.string().default('tileserver-gl'),
 

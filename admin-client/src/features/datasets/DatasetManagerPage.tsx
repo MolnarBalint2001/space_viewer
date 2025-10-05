@@ -20,6 +20,7 @@ import {
 import { useApi } from "../../hooks/useApi";
 import { useToast } from "../../components/ToastContext";
 import { routes } from "../../config/routes";
+import { EmbeddingServiceChecker } from "./EmbeddingServiceChecker";
 
 const visibilityOptions = [
     { label: "Privát", value: DatasetVisibility.Private },
@@ -338,11 +339,15 @@ export const DatasetManagerPage = () => {
                         Tölts fel TIF állományokat, kövesd a feldolgozás állapotát és oszd meg a kutatásaidat.
                     </p>
                 </div>
-                <Button
-                    label="Új kutatás"
-                    icon="pi pi-plus"
-                    onClick={() => setIsCreateOpen(true)}
-                />
+                <div className="flex items-center gap-8">
+                    <EmbeddingServiceChecker />
+                    <Button
+                        label="Új kutatás"
+                        icon="pi pi-plus"
+                        onClick={() => setIsCreateOpen(true)}
+                    />
+                </div>
+
             </div>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -362,11 +367,10 @@ export const DatasetManagerPage = () => {
                                         key={dataset.id}
                                         type="button"
                                         onClick={() => setSelectedDatasetId(dataset.id ?? null)}
-                                        className={`w-full rounded-md border p-3 text-left transition ${
-                                            isActive
+                                        className={`w-full rounded-md border p-3 text-left transition ${isActive
                                                 ? "border-sky-500/70 bg-sky-500/10"
                                                 : "border-slate-800 bg-slate-900/40 hover:border-slate-700"
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between gap-2">
                                             <span className="font-medium text-white">

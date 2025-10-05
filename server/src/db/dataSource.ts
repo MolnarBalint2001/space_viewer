@@ -8,11 +8,12 @@ import { DatasetAttachment } from '../domain/entities/DatasetAttachment';
 import { Polygon } from '../domain/entities/Polygon';
 import { PatternSearchRun } from '../domain/entities/PatternSearchRun';
 import { PatternSearchResult } from '../domain/entities/PatternSearchResult';
+import "reflect-metadata";
 
 
 
 export const AppDataSource = new DataSource({
-  type: 'postgres',
+  type: "postgres",
   host: env.DB_HOST,
   port: env.DB_PORT,
   username: env.DB_USER,
@@ -31,6 +32,31 @@ export const AppDataSource = new DataSource({
     PatternSearchResult,
   ],
   migrations: [
-    "src/db/migrations/*.ts"
+    "src/db/migrations/*.ts",
   ],
 });
+
+if ((AppDataSource.driver as any)?.options?.type === "postgres") {
+  const driver = AppDataSource.driver as any;
+  const typeName = "vector";
+  const arrays = [
+    "supportedDataTypes",
+    "withLengthColumnTypes",
+    "withPrecisionColumnTypes",
+    "withScaleColumnTypes",
+    "spatialTypes",
+  ];
+
+  arrays.forEach((key) => {
+    const arr = (driver as any)[key];
+    if (Array.isArray(arr) && !arr.includes(typeName)) {
+      arr.push(typeName);
+    }
+  });
+
+  const defaults = (driver as any).dataTypeDefaults ?? {};
+  if (!defaults[typeName]) {
+    defaults[typeName] = { length: 384 };
+  }
+  (driver as any).dataTypeDefaults = defaults;
+}
