@@ -96,7 +96,7 @@ export const GraphExplorerPage = () => {
               lapon.
             </div>
           ) : (
-            <AttachmentGraphPanel datasetId={selectedDatasetId} heightClass="h-[630px]" />
+            <AttachmentGraphPanel datasetId={selectedDatasetId} heightClass="h-[700px]" />
           )}
         </div>
       </Card>
