@@ -23,6 +23,7 @@
     "laz-perf": "^0.0.7",
     "leaflet": "^1.9.4",
     "leaflet.heat": "^0.2.0",
+    "neovis.js": "^2.1.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
     "proj4": "^2.9.1",
@@ -38,6 +39,7 @@
     "three": "^0.169.0",
     "three-geojson": "github:gkjohnson/three-geojson",
     "three-stdlib": "^2.36.0",
+    "vis-network": "^10.0.2",
     "yup": "^1.7.0"
   },
   "devDependencies": {

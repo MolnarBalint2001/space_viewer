@@ -23,6 +23,12 @@ const menuItems = [
         icon: "pi pi-map",
         path: routes.mapViewer,
     },
+    {
+        id: "graph",
+        label: "Kapcsolati gráf",
+        icon: "pi pi-share-alt",
+        path: routes.graph,
+    },
 ];
 export const Sidebar = () => {
     const { setToken } = useAuth();
@@ -44,7 +50,7 @@ export const Sidebar = () => {
     return (
         <div
             className={`${
-                open ? "w-[320px]" : "w-20"
+                open ? "w-[260px]" : "w-20"
             } bg-slate-800 shadow-lg transition-all duration-300 ease-in-out flex flex-col border-r border-slate-900 overflow-hidden`}
             style={{ height: "calc(100vh - 58px)" }}
         >

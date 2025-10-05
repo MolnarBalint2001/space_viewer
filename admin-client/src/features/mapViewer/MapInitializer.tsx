@@ -1,31 +1,51 @@
-import { notifyManager } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useMap } from "react-leaflet";
+import type { Layer } from "leaflet";
 import { useToast } from "../../components/ToastContext";
+import { useMapSidebar } from "../../components/MapSidebarContext";
+import type { LineString } from "geojson";
 
 export const MapInitializer = () => {
 
     const map = useMap();
     const {notifyError, notifySuccess} = useToast();
+    const { setActiveLineString, activeLineString } = useMapSidebar();
 
     const [crePopVis, setCrePopVis] = useState<boolean>(false);
     const labelRef = useRef<HTMLInputElement>(null);
     const [geom, setGeom] = useState<any | null>(null);
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const pendingLayerRef = useRef(null);
+    const pendingLayerRef = useRef<Layer | null>(null);
+    const lineLayerRef = useRef<Layer | null>(null);
 
     //Actions
-    const createPolygonEvent = (e: any) => {
+    const handleGeometryCreate = useCallback((e: any) => {
+        const layer: any = e.layer;
+        const geojson = layer?.toGeoJSON?.();
+        if (!geojson || !geojson.geometry) {
+            return;
+        }
+
+        if (geojson.geometry.type === "LineString") {
+            if (lineLayerRef.current) {
+                map.removeLayer(lineLayerRef.current);
+            }
+            lineLayerRef.current = layer;
+            if (typeof layer.setStyle === "function") {
+                layer.setStyle({ color: "#38bdf8", weight: 4 });
+            }
+            setActiveLineString(geojson.geometry as LineString);
+            return;
+        }
+
         setCrePopVis(true);
-        const layer:any = e.layer;
-        pendingLayerRef.current = e.layer;
-        const geojson = layer?.toGeoJSON();
+        pendingLayerRef.current = layer;
         setGeom(geojson);
-    }
+    }, [map, setActiveLineString]);
 
 
     const createPolygon = useCallback(async() => {
@@ -76,13 +96,20 @@ export const MapInitializer = () => {
             removalMode: true,
         });
 
-        map.addEventListener("pm:create", createPolygonEvent);
+        map.addEventListener("pm:create", handleGeometryCreate);
 
         return () => {
-            map.removeEventListener('pm:create', createPolygonEvent);
+            map.removeEventListener('pm:create', handleGeometryCreate);
           };
     
-    }, [map]);
+    }, [map, handleGeometryCreate]);
+
+    useEffect(() => {
+        if (!activeLineString && lineLayerRef.current) {
+            map.removeLayer(lineLayerRef.current);
+            lineLayerRef.current = null;
+        }
+    }, [activeLineString, map]);
 
     const onDialogHide = () => {
         console.log(pendingLayerRef);

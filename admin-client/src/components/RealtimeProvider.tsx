@@ -1,9 +1,11 @@
-import { PropsWithChildren, useEffect, useRef } from "react";
+import type { PropsWithChildren, ReactElement } from "react";
+import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { WS_URL } from "../config/globals";
 import { useAuth } from "./AuthContext";
 import { useToast } from "./ToastContext";
-import { DatasetStatus, DatasetDetail } from "../config/api";
+import type { DatasetDetail } from "../config/api";
+import { DatasetStatus } from "../config/api";
 
 type DatasetStatusMessage = {
     type: "dataset:status";
@@ -13,9 +15,19 @@ type DatasetStatusMessage = {
     message?: string;
 };
 
-type RealtimeMessage = DatasetStatusMessage | Record<string, unknown>;
+type AttachmentTaggingMessage = {
+    type: "attachment:tagging";
+    datasetId: string;
+    attachmentId: string;
+    status: "processing" | "completed" | "failed";
+    filename?: string;
+    tags?: string[];
+    error?: string;
+};
 
-export const RealtimeProvider = ({ children }: PropsWithChildren): JSX.Element => {
+type RealtimeMessage = DatasetStatusMessage | AttachmentTaggingMessage | Record<string, unknown>;
+
+export const RealtimeProvider = ({ children }: PropsWithChildren): ReactElement => {
     const { token } = useAuth();
     const { notifySuccess, notifyError, notifyInfo } = useToast();
     const queryClient = useQueryClient();
@@ -36,6 +48,8 @@ export const RealtimeProvider = ({ children }: PropsWithChildren): JSX.Element =
                 const message: RealtimeMessage = JSON.parse(event.data ?? "{}");
                 if (message?.type === "dataset:status") {
                     handleDatasetStatus(message as DatasetStatusMessage);
+                } else if (message?.type === "attachment:tagging") {
+                    handleAttachmentTagging(message as AttachmentTaggingMessage);
                 }
             } catch (err) {
                 console.warn("Realtime message parse error", err);
@@ -78,6 +92,34 @@ export const RealtimeProvider = ({ children }: PropsWithChildren): JSX.Element =
             notifyInfo(
                 "Feldolgozás elindult",
                 `A(z) ${name} kutatás csempéinek generálása folyamatban.`
+            );
+        }
+    };
+
+    const handleAttachmentTagging = (payload: AttachmentTaggingMessage) => {
+        const { datasetId, attachmentId, status, filename, tags, error } = payload;
+        if (datasetId) {
+            queryClient.invalidateQueries({ queryKey: ["dataset", datasetId] });
+        }
+        queryClient.invalidateQueries({ queryKey: ["graph"] });
+
+        const attachmentLabel = filename ?? attachmentId;
+        if (status === "processing") {
+            notifyInfo(
+                "Címkézés folyamatban",
+                `A(z) ${attachmentLabel} melléklet címkézése elindult.`
+            );
+        } else if (status === "completed") {
+            notifySuccess(
+                "Címkézés kész",
+                tags?.length
+                    ? `${attachmentLabel}: ${tags.slice(0, 5).join(', ')}`
+                    : `A(z) ${attachmentLabel} melléklethez elkészültek a címkék.`
+            );
+        } else if (status === "failed") {
+            notifyError(
+                "Címkézés sikertelen",
+                error ?? `Nem sikerült feldolgozni a(z) ${attachmentLabel} mellékletet.`
             );
         }
     };

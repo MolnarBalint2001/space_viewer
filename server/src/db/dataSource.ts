@@ -6,6 +6,8 @@ import { Dataset } from '../domain/entities/Dataset';
 import { DatasetFile } from '../domain/entities/DatasetFile';
 import { DatasetAttachment } from '../domain/entities/DatasetAttachment';
 import { Polygon } from '../domain/entities/Polygon';
+import { PatternSearchRun } from '../domain/entities/PatternSearchRun';
+import { PatternSearchResult } from '../domain/entities/PatternSearchResult';
 
 
 
@@ -18,13 +20,15 @@ export const AppDataSource = new DataSource({
   database: env.DB_NAME,
   ssl: env.DB_SSL,
   synchronize: false,
-  logging: env.NODE_ENV !== 'production',
+  logging: false, //env.NODE_ENV !== 'production',
   entities: [
     AdminUser,
     Dataset,
     DatasetFile,
     DatasetAttachment,
-    Polygon
+    Polygon,
+    PatternSearchRun,
+    PatternSearchResult,
   ],
   migrations: [
     "src/db/migrations/*.ts"

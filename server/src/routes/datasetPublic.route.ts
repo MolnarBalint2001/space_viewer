@@ -14,6 +14,14 @@ router.get(
   DatasetController.getPublicMbtilesUrl
 );
 router.get(
+  "/public/:datasetId/files/:fileId/raw",
+  DatasetController.streamPublicFileContent
+);
+router.get(
+  "/public/:datasetId/files/:fileId/mbtiles/raw",
+  DatasetController.streamPublicMbtiles
+);
+router.get(
   "/public/:datasetId/attachments/:attachmentId/download",
   DatasetController.getPublicAttachmentDownloadUrl
 );

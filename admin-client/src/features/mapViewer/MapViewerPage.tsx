@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { useSearchParams } from "react-router-dom";
 import { TILESERVER_URL } from "../../config/globals";
@@ -7,6 +7,8 @@ import { useMapSidebar } from "../../components/MapSidebarContext";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import { MapInitializer } from "./MapInitializer";
+import { MapSearchResultOverlay } from "./MapSearchResultOverlay";
+import { PatternResultLayer } from "./PatternResultLayer";
 import { Button } from "primereact/button";
 
 const DEFAULT_CENTER: [number, number] = [0.10437, 0.09613];
@@ -35,6 +37,9 @@ export const MapViewerPage = () => {
     const datasetName = searchParams.get("name");
     const latParam = searchParams.get("lat");
     const lngParam = searchParams.get("lng");
+    const datasetId = searchParams.get("datasetId");
+    const datasetFileId = searchParams.get("fileId");
+    const datasetFileName = searchParams.get("fileName");
     const tileUrl = useMemo(() => buildTileUrl(tilesKey, tilesUrl), [tilesKey, tilesUrl]);
     const parsedCenter = useMemo(() => {
         const lat = latParam ? Number(latParam) : null;
@@ -46,8 +51,34 @@ export const MapViewerPage = () => {
     }, [latParam, lngParam]);
 
     const {
-        toggleOpened
+        toggleOpened,
+        setCurrentDataset,
+        setActiveLineString,
+        setLastSearchResult,
     } = useMapSidebar();
+
+    useEffect(() => {
+        if (datasetId) {
+            setCurrentDataset({
+                datasetId,
+                datasetName,
+                datasetFileId: datasetFileId ?? undefined,
+                datasetFileName: datasetFileName ?? undefined,
+            });
+        } else {
+            setCurrentDataset(null);
+        }
+        setActiveLineString(null);
+        setLastSearchResult(null);
+    }, [
+        datasetId,
+        datasetName,
+        datasetFileId,
+        datasetFileName,
+        setCurrentDataset,
+        setActiveLineString,
+        setLastSearchResult,
+    ]);
 
 
     return (
@@ -58,11 +89,11 @@ export const MapViewerPage = () => {
                 </span>
                 <code className="truncate text-xs text-slate-400">{tileUrl}</code>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 relative">
+                <MapSearchResultOverlay activeDatasetFileId={datasetFileId} />
                 <Button
                     icon={"pi pi-cog"}
                     severity="secondary"
-                    text
                     rounded
                     className="absolute z-[1000] right-0 m-4" onClick={toggleOpened}></Button>
 
@@ -83,6 +114,7 @@ export const MapViewerPage = () => {
                         url={tileUrl}
                         attribution="&copy; MapTiler Tiles"
                     />
+                    <PatternResultLayer activeDatasetFileId={datasetFileId} />
                 </MapContainer>
             </div>
         </div>

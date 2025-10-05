@@ -1,5 +1,6 @@
 import { logger } from "../utils/logger"
 import { registerDatasetProcessingConsumer } from "./datasetProcessing.consumer"
+import { registerDatasetAttachmentTaggingConsumer } from "./datasetAttachmentTagging.consumer"
 
 /**
  * RabbitMQ Consumer függvények inicializálása
@@ -10,6 +11,7 @@ export default async function initializeRabbitMqConsumers() {
 
         const consumers = [
             registerDatasetProcessingConsumer,
+            registerDatasetAttachmentTaggingConsumer,
         ] as (()=>Promise<any>)[]
         await Promise.all(consumers.map((fn) => fn()))
     }

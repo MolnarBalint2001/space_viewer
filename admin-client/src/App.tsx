@@ -7,6 +7,7 @@ import { LoginPage } from "./features/login/LoginPage";
 import { DashboardPage } from "./features/dashboard/DashboardPage";
 import { MapViewerPage } from "./features/mapViewer/MapViewerPage";
 import { DatasetManagerPage } from "./features/datasets/DatasetManagerPage";
+import { GraphExplorerPage } from "./features/graph/GraphExplorerPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RealtimeProvider } from "./components/RealtimeProvider";
 
@@ -42,6 +43,10 @@ function App() {
                                 <Route
                                     path={routes.datasets}
                                     element={<DatasetManagerPage />}
+                                />
+                                <Route
+                                    path={routes.graph}
+                                    element={<GraphExplorerPage />}
                                 />
                                 </Route>
 

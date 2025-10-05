@@ -51,6 +51,22 @@ services:
       timeout: 5s
       retries: 5
 
+  neo4j:
+    image: neo4j:5.23
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/asdQWE123.}
+      NEO4J_PLUGINS: '[]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j-data:/data
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
 
   minio:
     image: minio/minio:latest
@@ -86,3 +102,4 @@ volumes:
   rabbitmq_data: {}
   minio-data:
     driver: local
+  neo4j-data: {}

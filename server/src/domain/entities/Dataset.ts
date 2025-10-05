@@ -12,6 +12,7 @@ import {
 import { AdminUser } from "./AdminUser";
 import { DatasetFile } from "./DatasetFile";
 import { DatasetAttachment } from "./DatasetAttachment";
+import { PatternSearchRun } from "./PatternSearchRun";
 
 export enum DatasetVisibility {
   PRIVATE = "private",
@@ -78,5 +79,7 @@ export class Dataset {
 
   @OneToMany(() => DatasetAttachment, (attachment) => attachment.dataset)
   attachments!: DatasetAttachment[];
-}
 
+  @OneToMany(() => PatternSearchRun, (run) => run.dataset)
+  patternSearchRuns!: PatternSearchRun[];
+}
